@@ -1,0 +1,837 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ija Nbadlou</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Changa:wght@600;700&family=Work+Sans:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout concept: a corkboard bulletin wall — listings are pinned paper tags, slightly askew, like a real neighborhood swap board */
+  :root{
+    --board:#d8c6a0; --board2:#cdb88e;
+    --paper:#faf3e2; --paper-edge:#e9dcc0;
+    --ink:#3a2a1c; --ink-soft:#6b5742;
+    --accent:#bf4e2c; --accent-ink:#fff;
+    --accent2:#2e6b5e;
+    --pin:#b23327;
+    --line: rgba(58,42,28,.18);
+    --shadow: rgba(40,28,16,.28);
+    --warn-bg: #f4dfb8; --warn-ink:#5c3f17;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --board:#221710; --board2:#2a1d14;
+      --paper:#2c2318; --paper-edge:#241b12;
+      --ink:#ecdfc6; --ink-soft:#bdac90;
+      --accent:#e9784e; --accent-ink:#241208;
+      --accent2:#67bdac;
+      --pin:#e8604c;
+      --line: rgba(236,223,198,.16);
+      --shadow: rgba(0,0,0,.55);
+      --warn-bg:#3c2d14; --warn-ink:#f0cf92;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --board:#221710; --board2:#2a1d14;
+    --paper:#2c2318; --paper-edge:#241b12;
+    --ink:#ecdfc6; --ink-soft:#bdac90;
+    --accent:#e9784e; --accent-ink:#241208;
+    --accent2:#67bdac;
+    --pin:#e8604c;
+    --line: rgba(236,223,198,.16);
+    --shadow: rgba(0,0,0,.55);
+    --warn-bg:#3c2d14; --warn-ink:#f0cf92;
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:
+      radial-gradient(circle at 15% 20%, rgba(0,0,0,.05) 0, transparent 2px),
+      radial-gradient(circle at 70% 60%, rgba(0,0,0,.05) 0, transparent 2px),
+      radial-gradient(circle at 40% 85%, rgba(0,0,0,.04) 0, transparent 2px),
+      linear-gradient(180deg, var(--board), var(--board2));
+    background-size: 38px 38px, 44px 44px, 50px 50px, 100% 100%;
+    color: var(--ink);
+    font-family: 'Work Sans', 'Cairo', sans-serif;
+    min-height:100%;
+  }
+  html,body{height:auto}
+  [hidden]{display:none!important}
+
+  .wrap{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left,0px));
+    padding-right: max(16px, env(safe-area-inset-right,0px));
+  }
+
+  /* ---------- header ---------- */
+  header.bar{
+    position: sticky; top: env(safe-area-inset-top,0px); z-index: 20;
+    background: color-mix(in srgb, var(--board) 92%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  body::before{
+    content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px);
+    z-index:21; background: var(--board);
+  }
+  .bar-inner{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding-block: 14px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand svg{ width:34px; height:34px; flex:none; }
+  .brand .name{
+    font-family:'Caveat','Changa',cursive; font-weight:700; font-size: 1.9rem;
+    color: var(--ink); line-height:1;
+  }
+  [lang="ar"] .brand .name{ font-family:'Changa','Caveat',sans-serif; }
+  .bar-actions{ display:flex; align-items:center; gap:8px; }
+  .btn{
+    font: inherit; font-weight:600; font-size:.92rem; cursor:pointer;
+    border-radius: 8px; padding: 9px 16px; border: 1.5px solid var(--line);
+    background: var(--paper); color: var(--ink);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:hover{ transform: translateY(-1px); }
+  .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+  .btn:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline: 2px solid var(--accent2); outline-offset: 2px;
+  }
+  .btn.primary{ background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+  .btn.primary:hover{ box-shadow: 0 6px 14px var(--shadow); }
+  .btn.ghost{ background: transparent; }
+  .lang-toggle{ display:flex; border:1.5px solid var(--line); border-radius:8px; overflow:hidden; }
+  .lang-toggle button{
+    font: inherit; font-weight:700; font-size:.82rem; letter-spacing:.03em;
+    padding: 8px 12px; border:0; cursor:pointer; background: transparent; color: var(--ink-soft);
+  }
+  .lang-toggle button[aria-pressed="true"]{ background: var(--accent); color: var(--accent-ink); }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-block: 40px 28px; }
+  .hero-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap: 32px; align-items:center; }
+  @media (max-width: 760px){ .hero-grid{ grid-template-columns: 1fr; } }
+  h1.headline{
+    font-family:'Caveat',cursive; font-weight:700; font-size: clamp(2.6rem, 6vw, 4.4rem);
+    line-height: .95; margin: 0 0 10px; text-wrap: balance; color: var(--ink);
+  }
+  [lang="ar"] h1.headline{ font-family:'Changa',sans-serif; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height:1.15; }
+  .headline .pop{ color: var(--accent); }
+  p.lede{ font-size:1.05rem; color: var(--ink-soft); max-width: 46ch; margin: 0 0 22px; }
+  .hero-ctas{ display:flex; gap:10px; flex-wrap:wrap; }
+
+  .hero-art{ position:relative; }
+  .hero-art svg{ width:100%; height:auto; max-width: 380px; display:block; margin-inline:auto; }
+
+  /* ---------- how it works strip ---------- */
+  .steps{
+    display:grid; grid-template-columns: repeat(3,1fr); gap: 14px;
+    margin-block: 6px 30px;
+  }
+  @media (max-width: 680px){ .steps{ grid-template-columns: 1fr; } }
+  .step{
+    background: var(--paper); border:1px solid var(--line); border-radius:10px;
+    padding: 16px; display:flex; gap:12px; align-items:flex-start;
+  }
+  .step svg{ width:26px; height:26px; flex:none; color: var(--accent2); }
+  .step h3{ margin:0 0 4px; font-size:.98rem; }
+  .step p{ margin:0; font-size:.86rem; color: var(--ink-soft); }
+
+  /* ---------- controls ---------- */
+  .controls{
+    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    margin-block: 4px 18px;
+  }
+  .search{
+    flex: 1 1 220px; min-width: 0;
+    display:flex; align-items:center; gap:8px;
+    background: var(--paper); border:1.5px solid var(--line); border-radius:9px;
+    padding: 9px 12px;
+  }
+  .search svg{ width:17px; height:17px; flex:none; color: var(--ink-soft); }
+  .search input{
+    border:0; background:transparent; font:inherit; color:var(--ink); width:100%; min-width:0;
+  }
+  .search input::placeholder{ color: var(--ink-soft); }
+  .chips{ display:flex; gap:7px; flex-wrap:wrap; }
+  .chip{
+    font: inherit; font-size:.84rem; font-weight:600; cursor:pointer;
+    border:1.5px solid var(--line); background: var(--paper); color: var(--ink-soft);
+    border-radius: 999px; padding: 7px 13px; display:flex; align-items:center; gap:6px;
+  }
+  .chip[aria-pressed="true"]{ background: var(--accent2); border-color: transparent; color:#fff; }
+  .chip svg{ width:14px; height:14px; }
+
+  .count-line{ color: var(--ink-soft); font-size:.86rem; margin: 0 0 14px; display:flex; align-items:center; gap:8px; }
+  .dot-live{ width:7px; height:7px; border-radius:50%; background: var(--accent2); flex:none; }
+  .dot-live.off{ background: var(--ink-soft); opacity:.5; }
+
+  /* ---------- listing grid ---------- */
+  .grid{
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(230px,1fr));
+    gap: 22px 18px; padding-block: 4px 48px;
+  }
+  .tag{
+    position:relative; background: var(--paper); border:1px solid var(--paper-edge);
+    border-radius: 4px 4px 10px 10px; box-shadow: 0 6px 16px var(--shadow);
+    transform: rotate(var(--rot,-1deg));
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .tag:nth-child(3n){ --rot: 1.2deg; }
+  .tag:nth-child(3n+1){ --rot: -1deg; }
+  .tag:nth-child(3n+2){ --rot: .6deg; }
+  .pin{
+    position:absolute; top:-7px; left:50%; transform: translateX(-50%);
+    width:14px; height:14px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #fff6, transparent 55%), var(--pin);
+    box-shadow: 0 2px 3px var(--shadow); z-index:2;
+  }
+  .tag-photo{
+    width:100%; aspect-ratio: 4/3; background: var(--board2);
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .tag-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .tag-photo svg{ width:40%; height:40%; color: var(--ink-soft); opacity:.5; }
+  .tag-body{ padding: 13px 14px 15px; display:flex; flex-direction:column; gap:7px; flex:1; min-width:0; }
+  .tag-top{ display:flex; align-items:center; justify-content:space-between; gap:6px; }
+  .cat-badge{
+    display:inline-flex; align-items:center; gap:5px; font-size:.72rem; font-weight:700;
+    letter-spacing:.02em; color: var(--accent2); text-transform:uppercase;
+  }
+  .cat-badge svg{ width:13px; height:13px; }
+  .tag h3{ margin:0; font-size:1.08rem; line-height:1.25; overflow-wrap:anywhere; }
+  .tag .want{ font-size:.86rem; color: var(--ink); margin:0; }
+  .tag .want b{ color: var(--accent); font-weight:700; }
+  .tag .desc{ font-size:.82rem; color: var(--ink-soft); margin:0; min-width:0; overflow-wrap:anywhere; }
+  .tag-foot{
+    margin-top:auto; display:flex; align-items:center; justify-content:space-between;
+    font-size:.78rem; color: var(--ink-soft); gap:6px; border-top:1px dashed var(--line); padding-top:8px;
+  }
+  .tag-foot span{ display:flex; align-items:center; gap:4px; min-width:0; }
+  .tag-foot svg{ width:13px; height:13px; flex:none; }
+  .tag-foot .city{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  .empty{
+    text-align:center; padding: 50px 20px; color: var(--ink-soft);
+  }
+  .empty svg{ width:52px; height:52px; margin-bottom:10px; opacity:.5; }
+  .empty p{ margin:0 0 14px; }
+
+  /* ---------- post form ---------- */
+  .form-wrap{
+    background: var(--paper); border:1px solid var(--line); border-radius: 14px;
+    padding: 20px; margin-block: 0 36px; box-shadow: 0 10px 26px var(--shadow);
+  }
+  .form-wrap h2{
+    font-family:'Caveat',cursive; font-size:2rem; margin:0 0 4px; font-weight:700;
+  }
+  [lang="ar"] .form-wrap h2{ font-family:'Changa',sans-serif; font-size:1.5rem; }
+  .form-wrap > p{ margin:0 0 16px; color: var(--ink-soft); font-size:.88rem; }
+  form{ display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 620px){ form{ grid-template-columns: 1fr; } }
+  .field{ display:flex; flex-direction:column; gap:5px; min-width:0; }
+  .field.span2{ grid-column: 1/-1; }
+  .field label{ font-size:.82rem; font-weight:600; color: var(--ink-soft); }
+  .field input, .field select, .field textarea{
+    font: inherit; font-size:.95rem; padding: 9px 11px; border-radius:8px;
+    border:1.5px solid var(--line); background: color-mix(in srgb, var(--paper) 70%, var(--board) 30%);
+    color: var(--ink); width:100%;
+  }
+  .field textarea{ resize: vertical; min-height: 64px; font-family:inherit; }
+  .photo-row{ display:flex; align-items:center; gap:12px; }
+  .photo-preview{
+    width:56px; height:56px; border-radius:8px; border:1.5px dashed var(--line);
+    display:flex; align-items:center; justify-content:center; overflow:hidden; flex:none; background: var(--board2);
+  }
+  .photo-preview img{ width:100%; height:100%; object-fit:cover; }
+  .photo-preview svg{ width:22px; height:22px; color:var(--ink-soft); }
+  .file-btn{
+    position:relative; overflow:hidden; display:inline-block;
+  }
+  .file-btn input[type=file]{
+    position:absolute; inset:0; opacity:0; cursor:pointer;
+  }
+  .form-actions{ grid-column:1/-1; display:flex; gap:10px; justify-content:flex-end; align-items:center; margin-top:4px; }
+  .form-error{ grid-column:1/-1; font-size:.84rem; color: var(--accent); margin:0; }
+
+  /* ---------- toast ---------- */
+  .toast{
+    position: fixed; left:50%; bottom: max(22px, env(safe-area-inset-bottom,0px));
+    transform: translateX(-50%) translateY(8px); opacity:0; pointer-events:none;
+    background: var(--ink); color: var(--paper); font-size:.88rem; font-weight:600;
+    padding: 11px 18px; border-radius: 10px; box-shadow: 0 10px 22px var(--shadow);
+    transition: opacity .2s ease, transform .2s ease; z-index: 50; max-width: 86vw; text-align:center;
+  }
+  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+  footer{
+    text-align:center; padding: 20px 0 max(28px, env(safe-area-inset-bottom,0px));
+    color: var(--ink-soft); font-size:.8rem; border-top:1px solid var(--line);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; animation: none !important; }
+  }
+</style>
+
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="ic-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3 3 7l4 4"/><path d="M3 7h13a4 4 0 0 1 4 4v1"/><path d="M17 21l4-4-4-4"/><path d="M21 17H8a4 4 0 0 1-4-4v-1"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="ic-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7.4 7-12.5A7 7 0 0 0 5 9.5C5 14.6 12 22 12 22Z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="ic-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.6-4 5-6 8-6s6.4 2 8 6"/></symbol>
+  <symbol id="ic-clothes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 6 7l-3 2 2 3h2v8h10v-8h2l2-3-3-2-3-3"/><path d="M9 4a3 3 0 0 0 6 0"/></symbol>
+  <symbol id="ic-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+  <symbol id="ic-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
+  <symbol id="ic-sofa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/><path d="M3 11h18v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5Z"/><path d="M5 17v3M19 17v3"/></symbol>
+  <symbol id="ic-toy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a2.5 2.5 0 0 1 2.5 2.5c0 .7-.3 1.2-.7 1.7.5-.2 1-.3 1.6-.2a2.5 2.5 0 1 1-1.9 4.1c.4.5.5 1.1.5 1.4a2.5 2.5 0 1 1-4.5 1.5c-.1-.3 0-.9.4-1.5a2.5 2.5 0 1 1-1.9-4.1c.6-.1 1.1 0 1.6.2-.4-.5-.7-1-.7-1.7A2.5 2.5 0 0 1 12 2Z"/><circle cx="9" cy="17" r="2.5"/><circle cx="15" cy="17" r="2.5"/></symbol>
+  <symbol id="ic-ball" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.5 2.5 15.5 0 18M3 12h18M5.6 5.6c3 3 9.8 3 12.8 0M5.6 18.4c3-3 9.8-3 12.8 0"/></symbol>
+  <symbol id="ic-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 7 9-4 9 4-9 4-9-4Z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></symbol>
+  <symbol id="ic-photo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-4 4-3-3-6 6"/></symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ic-post" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-8-8 18-2-8-8-2Z"/></symbol>
+  <symbol id="ic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.55L3 20l1.3-4.3A8.5 8.5 0 1 1 21 11.5Z"/></symbol>
+  <symbol id="ic-handshake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a2.4 2.4 0 0 0 3.4-3.4"/><path d="m14 14 3 3a2.4 2.4 0 0 0 3.4-3.4L16 9.2a2.5 2.5 0 0 0-3.1-.3l-.9.6a2.5 2.5 0 0 1-3.1-.3L7 7.5"/><path d="M3 6.8 7.2 3l5 4-2.4 2.3a1.7 1.7 0 0 0 2.4 2.4"/><path d="m3 6.8 4.2 4.9"/></symbol>
+  <symbol id="ic-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8V6a2 2 0 0 0-2-2H8.5L21 16.5V8Z"/><path d="M21 16.5 12 7.5H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1.5Z"/><path d="m2 2 20 20"/></symbol>
+  <symbol id="ic-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+</svg>
+
+<header class="bar">
+  <div class="wrap bar-inner">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-swap"/></svg>
+      <span class="name">Ija Nbadlou</span>
+    </div>
+    <div class="bar-actions">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" id="lang-ar" aria-pressed="true">عربي</button>
+        <button type="button" id="lang-fr" aria-pressed="false">FR</button>
+      </div>
+      <button class="btn primary" id="open-form-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="width:15px;height:15px;vertical-align:-2px;margin-inline-end:4px"><use href="#ic-plus"/></svg>
+        <span data-i18n="post_cta"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <h1 class="headline"><span data-i18n="hero_line1"></span> <span class="pop" data-i18n="hero_line2"></span></h1>
+        <p class="lede" data-i18n="hero_lede"></p>
+        <div class="hero-ctas">
+          <button class="btn primary" id="hero-post-btn" type="button" data-i18n="hero_cta1"></button>
+          <a class="btn ghost" href="#listings" data-i18n="hero_cta2"></a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 320 240" fill="none">
+          <ellipse cx="160" cy="205" rx="120" ry="14" fill="var(--board2)"/>
+          <g transform="translate(36,34) rotate(-6)">
+            <rect x="0" y="0" width="100" height="100" rx="8" fill="var(--paper)" stroke="var(--line)"/>
+            <circle cx="50" cy="-6" r="6" fill="var(--pin)"/>
+            <rect x="14" y="14" width="72" height="50" rx="4" fill="var(--board2)"/>
+            <path d="M34 48l10-14 9 10 7-8 12 12" stroke="var(--ink-soft)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="14" y="72" width="72" height="8" rx="4" fill="var(--line)"/>
+            <rect x="14" y="84" width="46" height="7" rx="3.5" fill="var(--line)"/>
+          </g>
+          <g transform="translate(184,54) rotate(5)">
+            <rect x="0" y="0" width="100" height="100" rx="8" fill="var(--paper)" stroke="var(--line)"/>
+            <circle cx="50" cy="-6" r="6" fill="var(--pin)"/>
+            <rect x="14" y="14" width="72" height="50" rx="4" fill="var(--board2)"/>
+            <rect x="34" y="28" width="32" height="24" rx="3" fill="none" stroke="var(--ink-soft)" stroke-width="3"/>
+            <path d="M40 52v6M60 52v6" stroke="var(--ink-soft)" stroke-width="3" stroke-linecap="round"/>
+            <rect x="14" y="72" width="72" height="8" rx="4" fill="var(--line)"/>
+            <rect x="14" y="84" width="52" height="7" rx="3.5" fill="var(--line)"/>
+          </g>
+          <g transform="translate(110,120)">
+            <circle cx="50" cy="50" r="46" fill="var(--accent)" opacity=".14"/>
+            <path d="M22 44l-9 9 9 9M13 53h38a11 11 0 0 1 11 11v3" stroke="var(--accent)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M78 56l9-9-9-9M87 47H49a11 11 0 0 1-11-11v-3" stroke="var(--accent2)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps" aria-label="How it works">
+    <div class="step">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-post"/></svg>
+      <div><h3 data-i18n="step1_t"></h3><p data-i18n="step1_d"></p></div>
+    </div>
+    <div class="step">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chat"/></svg>
+      <div><h3 data-i18n="step2_t"></h3><p data-i18n="step2_d"></p></div>
+    </div>
+    <div class="step">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-handshake"/></svg>
+      <div><h3 data-i18n="step3_t"></h3><p data-i18n="step3_d"></p></div>
+    </div>
+  </section>
+
+  <section class="form-wrap" id="post-form-section" hidden>
+    <h2 data-i18n="form_title"></h2>
+    <p data-i18n="form_sub"></p>
+    <form id="listing-form">
+      <div class="field">
+        <label for="f-title" data-i18n="f_title"></label>
+        <input id="f-title" required maxlength="60">
+      </div>
+      <div class="field">
+        <label for="f-cat" data-i18n="f_cat"></label>
+        <select id="f-cat" required></select>
+      </div>
+      <div class="field span2">
+        <label for="f-desc" data-i18n="f_desc"></label>
+        <textarea id="f-desc" maxlength="220" required></textarea>
+      </div>
+      <div class="field span2">
+        <label for="f-want" data-i18n="f_want"></label>
+        <input id="f-want" required maxlength="80">
+      </div>
+      <div class="field">
+        <label for="f-city" data-i18n="f_city"></label>
+        <select id="f-city" required></select>
+      </div>
+      <div class="field">
+        <label for="f-name" data-i18n="f_name"></label>
+        <input id="f-name" required maxlength="30">
+      </div>
+      <div class="field span2">
+        <label data-i18n="f_photo"></label>
+        <div class="photo-row">
+          <div class="photo-preview" id="photo-preview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-photo"/></svg>
+          </div>
+          <span class="btn ghost file-btn">
+            <span data-i18n="f_photo_btn"></span>
+            <input type="file" id="f-photo" accept="image/*">
+          </span>
+        </div>
+      </div>
+      <p class="form-error" id="form-error" hidden></p>
+      <div class="form-actions">
+        <button type="button" class="btn ghost" id="cancel-form-btn" data-i18n="f_cancel"></button>
+        <button type="submit" class="btn primary" id="submit-btn" data-i18n="f_submit"></button>
+      </div>
+    </form>
+  </section>
+
+  <section id="listings">
+    <div class="controls">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-search"/></svg>
+        <input id="search-input" type="search" data-i18n-ph="search_ph">
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <p class="count-line"><span class="dot-live" id="live-dot"></span><span id="count-line"></span></p>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty-state" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-empty"/></svg>
+      <p id="empty-text"></p>
+      <button class="btn primary" id="empty-post-btn" type="button" data-i18n="hero_cta1"></button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span data-i18n="footer_text"></span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STRINGS = {
+    post_cta: {ar:"حط إعلان", fr:"Publier"},
+    hero_line1: {ar:"عندك حاجة ما تستعملهاش؟", fr:"Un objet qui dort chez toi ?"},
+    hero_line2: {ar:"بدّلها!", fr:"Échange-le."},
+    hero_lede: {ar:"منصة توانسة باش تبدل حوايجك بلا فلوس — حط إعلان بإلي عندك، قول شنوة تحب بدّلو بيه، وتلاقى لي يبدّل معاك.", fr:"La petite place tunisienne du troc : publie ce que tu as, dis ce que tu cherches en échange, et trouve quelqu'un près de toi."},
+    hero_cta1: {ar:"حط إعلان", fr:"Publier une annonce"},
+    hero_cta2: {ar:"شوف الإعلانات", fr:"Voir les annonces"},
+    step1_t: {ar:"1. حط إعلان", fr:"1. Publie"},
+    step1_d: {ar:"صورة، وصف قصير، وشنوة تحب بيه بدالو.", fr:"Une photo, une courte description, et ce que tu veux en échange."},
+    step2_t: {ar:"2. تهكى مع لي معجبو", fr:"2. Discutez"},
+    step2_d: {ar:"دور في الإعلانات وتواصل مع صاحب الحاجة إلي تعجبك.", fr:"Parcours les annonces et contacte directement la personne."},
+    step3_t: {ar:"3. بدّلو", fr:"3. Échangez"},
+    step3_d: {ar:"تلاقاو، تشوفو الحوايج، وتبدلوهم بلا ولا دينار.", fr:"Rencontrez-vous, vérifiez l'objet, échangez sans un seul dinar."},
+    form_title: {ar:"حط إعلان جديد", fr:"Publier une annonce"},
+    form_sub: {ar:"الإعلان يبان لكل زائرين الموقع فورا.", fr:"Ton annonce apparaît aussitôt pour tous les visiteurs du site."},
+    f_title: {ar:"اسم الحاجة", fr:"Nom de l'objet"},
+    f_cat: {ar:"الصنف", fr:"Catégorie"},
+    f_desc: {ar:"وصف قصير", fr:"Description"},
+    f_want: {ar:"تحب تبدلها بـ", fr:"Tu veux l'échanger contre"},
+    f_city: {ar:"المدينة", fr:"Ville"},
+    f_name: {ar:"الاسم متاعك", fr:"Ton prénom"},
+    f_photo: {ar:"صورة (إختياري)", fr:"Photo (optionnel)"},
+    f_photo_btn: {ar:"إختار صورة", fr:"Choisir une photo"},
+    f_cancel: {ar:"إلغاء", fr:"Annuler"},
+    f_submit: {ar:"أنشر الإعلان", fr:"Publier l'annonce"},
+    f_submitting: {ar:"ينشر...", fr:"Publication..."},
+    search_ph: {ar:"دور على حاجة…", fr:"Rechercher un objet…"},
+    empty_no_match: {ar:"ما فماش إعلانات توافق البحث متاعك.", fr:"Aucune annonce ne correspond à ta recherche."},
+    empty_store: {ar:"ما فماش إعلانات توا. كن أول واحد يبدل!", fr:"Pas encore d'annonce. Sois le premier à échanger !"},
+    loading_text: {ar:"يحمّل الإعلانات…", fr:"Chargement des annonces…"},
+    footer_text: {ar:"صنع في تونس 🇹🇳 — Ija Nbadlou، نبدلو بلا فلوس.", fr:"Fait en Tunisie 🇹🇳 — Ija Nbadlou, on échange sans argent."},
+    toast_posted: {ar:"تم نشر الإعلان!", fr:"Annonce publiée !"},
+    cat_all: {ar:"الكل", fr:"Tout"},
+    by_label: {ar:"من", fr:"par"},
+    write_error: {ar:"ما9درتش ننشر الإعلان. جرب مرة أخرى.", fr:"Impossible de publier l'annonce. Réessaie."},
+    write_denied: {ar:"لازم تكون متصل بحساب Claude باش تنشر إعلان.", fr:"Connecte-toi à ton compte Claude pour publier une annonce."}
+  };
+
+  var CATEGORIES = [
+    {id:"clothing", icon:"ic-clothes", ar:"ملابس", fr:"Vêtements"},
+    {id:"electronics", icon:"ic-chip", ar:"إلكترونيك", fr:"Électronique"},
+    {id:"books", icon:"ic-book", ar:"كتب", fr:"Livres"},
+    {id:"furniture", icon:"ic-sofa", ar:"موبيليا", fr:"Meubles"},
+    {id:"toys", icon:"ic-toy", ar:"لعب", fr:"Jouets"},
+    {id:"sport", icon:"ic-ball", ar:"رياضة", fr:"Sport"},
+    {id:"other", icon:"ic-box", ar:"أخرى", fr:"Autre"}
+  ];
+  var catById = {};
+  CATEGORIES.forEach(function(c){ catById[c.id] = c; });
+
+  var CITIES = ["Tunis","Ariana","Sfax","Sousse","Bizerte","Nabeul","Monastir","Kairouan","Gabès","Gafsa","Médenine","Béja"];
+
+  var LANG_KEY = "ijanbadlou_lang";
+  var LOCAL_FALLBACK_KEY = "ijanbadlou_local_listings";
+
+  function loadLang(){
+    try{ return localStorage.getItem(LANG_KEY) || "ar"; }catch(e){ return "ar"; }
+  }
+  function saveLang(l){ try{ localStorage.setItem(LANG_KEY, l); }catch(e){} }
+
+  function loadLocalFallback(){
+    try{
+      var raw = localStorage.getItem(LOCAL_FALLBACK_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveLocalFallback(list){
+    try{ localStorage.setItem(LOCAL_FALLBACK_KEY, JSON.stringify(list)); }catch(e){}
+  }
+
+  var state = {
+    lang: loadLang(),
+    listings: [],
+    activeCat: "all",
+    query: "",
+    loading: true,
+    dbReady: false   // true once we know we're on the shared store
+  };
+
+  var db = null; // shared store namespace, or null if unavailable
+
+  function t(key){
+    var s = STRINGS[key];
+    if(!s) return key;
+    return s[state.lang] || s.fr;
+  }
+
+  function applyI18n(){
+    document.documentElement.setAttribute("lang", state.lang);
+    document.body.setAttribute("lang", state.lang);
+    document.body.dir = state.lang === "ar" ? "rtl" : "ltr";
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      el.textContent = t(el.getAttribute("data-i18n"));
+    });
+    document.querySelectorAll("[data-i18n-ph]").forEach(function(el){
+      el.placeholder = t(el.getAttribute("data-i18n-ph"));
+    });
+    document.getElementById("lang-ar").setAttribute("aria-pressed", String(state.lang === "ar"));
+    document.getElementById("lang-fr").setAttribute("aria-pressed", String(state.lang === "fr"));
+    buildChips();
+    buildCitySelect();
+    buildCatSelect();
+    renderGrid();
+  }
+
+  function buildChips(){
+    var wrap = document.getElementById("chips");
+    wrap.innerHTML = "";
+    var allChip = document.createElement("button");
+    allChip.className = "chip"; allChip.type = "button";
+    allChip.setAttribute("aria-pressed", String(state.activeCat === "all"));
+    allChip.textContent = t("cat_all");
+    allChip.addEventListener("click", function(){ state.activeCat = "all"; buildChips(); renderGrid(); });
+    wrap.appendChild(allChip);
+
+    CATEGORIES.forEach(function(c){
+      var b = document.createElement("button");
+      b.className = "chip"; b.type = "button";
+      b.setAttribute("aria-pressed", String(state.activeCat === c.id));
+      b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#'+c.icon+'"/></svg><span></span>';
+      b.querySelector("span").textContent = state.lang === "ar" ? c.ar : c.fr;
+      b.addEventListener("click", function(){ state.activeCat = c.id; buildChips(); renderGrid(); });
+      wrap.appendChild(b);
+    });
+  }
+
+  function buildCitySelect(){
+    var sel = document.getElementById("f-city");
+    var prev = sel.value;
+    sel.innerHTML = "";
+    CITIES.forEach(function(city){
+      var o = document.createElement("option");
+      o.value = city; o.textContent = city;
+      sel.appendChild(o);
+    });
+    if(prev) sel.value = prev;
+  }
+
+  function buildCatSelect(){
+    var sel = document.getElementById("f-cat");
+    var prev = sel.value;
+    sel.innerHTML = "";
+    CATEGORIES.forEach(function(c){
+      var o = document.createElement("option");
+      o.value = c.id; o.textContent = state.lang === "ar" ? c.ar : c.fr;
+      sel.appendChild(o);
+    });
+    if(prev) sel.value = prev;
+  }
+
+  function matchesFilter(l){
+    if(state.activeCat !== "all" && l.category !== state.activeCat) return false;
+    if(state.query){
+      var hay = ((l.title||"") + " " + (l.desc||"") + " " + (l.want||"") + " " + (l.city||"")).toLowerCase();
+      if(hay.indexOf(state.query.toLowerCase()) === -1) return false;
+    }
+    return true;
+  }
+
+  function renderGrid(){
+    var grid = document.getElementById("grid");
+    var empty = document.getElementById("empty-state");
+    var emptyText = document.getElementById("empty-text");
+    var countLine = document.getElementById("count-line");
+    var liveDot = document.getElementById("live-dot");
+    liveDot.classList.toggle("off", !state.dbReady);
+    grid.innerHTML = "";
+
+    if(state.loading){
+      countLine.textContent = t("loading_text");
+      empty.hidden = true;
+      return;
+    }
+
+    var filtered = state.listings.filter(matchesFilter);
+
+    countLine.textContent = state.lang === "ar"
+      ? (filtered.length + " إعلان متاح")
+      : (filtered.length + (filtered.length === 1 ? " annonce disponible" : " annonces disponibles"));
+
+    if(filtered.length === 0){
+      empty.hidden = false;
+      emptyText.textContent = state.listings.length === 0 ? t("empty_store") : t("empty_no_match");
+      return;
+    }
+    empty.hidden = true;
+
+    filtered.forEach(function(l){
+      var cat = catById[l.category] || catById.other;
+      var card = document.createElement("article");
+      card.className = "tag";
+      var photoHtml = l.img
+        ? '<img src="'+l.img+'" alt="">'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#'+cat.icon+'"/></svg>';
+
+      card.innerHTML =
+        '<div class="pin"></div>'+
+        '<div class="tag-photo">'+photoHtml+'</div>'+
+        '<div class="tag-body">'+
+          '<div class="tag-top">'+
+            '<span class="cat-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#'+cat.icon+'"/></svg>'+(state.lang==="ar"?cat.ar:cat.fr)+'</span>'+
+          '</div>'+
+          '<h3></h3>'+
+          '<p class="desc"></p>'+
+          '<p class="want"></p>'+
+          '<div class="tag-foot">'+
+            '<span class="city"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-pin"/></svg><span></span></span>'+
+            '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-user"/></svg><span></span></span>'+
+          '</div>'+
+        '</div>';
+
+      card.querySelector("h3").textContent = l.title || "";
+      card.querySelector(".desc").textContent = l.desc || "";
+      var wantEl = card.querySelector(".want");
+      var wantLabel = state.lang === "ar" ? "تحب: " : "Cherche : ";
+      wantEl.innerHTML = wantLabel + '<b></b>';
+      wantEl.querySelector("b").textContent = l.want || "";
+      card.querySelector(".city span").textContent = l.city || "";
+      card.querySelector(".tag-foot span:last-child span").textContent = l.owner || "";
+
+      grid.appendChild(card);
+    });
+  }
+
+  function showToast(msg){
+    var el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function(){ el.classList.remove("show"); }, 2600);
+  }
+
+  function resizeImage(file, maxDim, cb){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var img = new Image();
+      img.onload = function(){
+        var w = img.width, h = img.height;
+        if(w > h && w > maxDim){ h = Math.round(h * maxDim / w); w = maxDim; }
+        else if(h > maxDim){ w = Math.round(w * maxDim / h); h = maxDim; }
+        var canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        try{ cb(canvas.toDataURL("image/jpeg", 0.6)); }
+        catch(err){ cb(null); }
+      };
+      img.onerror = function(){ cb(null); };
+      img.src = e.target.result;
+    };
+    reader.onerror = function(){ cb(null); };
+    reader.readAsDataURL(file);
+  }
+
+  // ---- data layer: shared db when available, local fallback otherwise ----
+  function startLocalFallback(){
+    state.dbReady = false;
+    state.listings = loadLocalFallback();
+    state.loading = false;
+    renderGrid();
+  }
+
+  function addListingLocal(listing){
+    var list = loadLocalFallback();
+    list.unshift(listing);
+    saveLocalFallback(list);
+    state.listings = list;
+    renderGrid();
+    return Promise.resolve();
+  }
+
+  function startSharedDb(dbNs){
+    db = dbNs;
+    state.dbReady = true;
+    var col = db.collection("listings");
+    col.orderBy("createdAt", "desc").limit(200).onSnapshot(
+      function(snap){
+        state.listings = snap.docs.map(function(d){
+          var data = d.data() || {};
+          data.id = d.id;
+          return data;
+        });
+        state.loading = false;
+        renderGrid();
+      },
+      function(err){
+        // shared store stopped responding mid-session: fall back locally
+        startLocalFallback();
+      }
+    );
+  }
+
+  function addListingShared(listing){
+    return db.collection("listings").add(listing);
+  }
+
+  function initData(){
+    if(typeof window.claude === "undefined" || typeof window.claude.use !== "function"){
+      startLocalFallback();
+      return;
+    }
+    window.claude.use("db").then(function(dbNs){
+      if(dbNs){ startSharedDb(dbNs); }
+      else { startLocalFallback(); }
+    }).catch(function(){ startLocalFallback(); });
+  }
+
+  // ---- wiring ----
+  document.getElementById("lang-ar").addEventListener("click", function(){ state.lang = "ar"; saveLang("ar"); applyI18n(); });
+  document.getElementById("lang-fr").addEventListener("click", function(){ state.lang = "fr"; saveLang("fr"); applyI18n(); });
+
+  var formSection = document.getElementById("post-form-section");
+  function openForm(){
+    formSection.hidden = false;
+    formSection.scrollIntoView({behavior: "smooth", block: "start"});
+    document.getElementById("f-title").focus();
+  }
+  document.getElementById("open-form-btn").addEventListener("click", openForm);
+  document.getElementById("hero-post-btn").addEventListener("click", openForm);
+  document.getElementById("empty-post-btn").addEventListener("click", openForm);
+  document.getElementById("cancel-form-btn").addEventListener("click", function(){ formSection.hidden = true; });
+
+  var pendingImg = null;
+  document.getElementById("f-photo").addEventListener("change", function(e){
+    var file = e.target.files && e.target.files[0];
+    if(!file) return;
+    resizeImage(file, 380, function(dataUrl){
+      pendingImg = dataUrl;
+      var prev = document.getElementById("photo-preview");
+      if(dataUrl){ prev.innerHTML = '<img src="'+dataUrl+'" alt="">'; }
+    });
+  });
+
+  document.getElementById("listing-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var form = this;
+    var submitBtn = document.getElementById("submit-btn");
+    var errorEl = document.getElementById("form-error");
+    errorEl.hidden = true;
+
+    var listing = {
+      category: document.getElementById("f-cat").value,
+      city: document.getElementById("f-city").value,
+      title: document.getElementById("f-title").value.trim(),
+      desc: document.getElementById("f-desc").value.trim(),
+      want: document.getElementById("f-want").value.trim(),
+      owner: document.getElementById("f-name").value.trim(),
+      img: pendingImg,
+      createdAt: Date.now()
+    };
+    if(!state.dbReady){ listing.id = "u" + Date.now(); }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = t("f_submitting");
+
+    var task = state.dbReady ? addListingShared(listing) : addListingLocal(listing);
+
+    task.then(function(){
+      form.reset();
+      pendingImg = null;
+      document.getElementById("photo-preview").innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-photo"/></svg>';
+      buildCatSelect();
+      formSection.hidden = true;
+      showToast(t("toast_posted"));
+      document.getElementById("listings").scrollIntoView({behavior:"smooth", block:"start"});
+    }).catch(function(err){
+      var msg = (err && err.code === "invalid_argument") ? t("write_denied") : t("write_error");
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+    }).finally(function(){
+      submitBtn.disabled = false;
+      submitBtn.textContent = t("f_submit");
+    });
+  });
+
+  document.getElementById("search-input").addEventListener("input", function(e){
+    state.query = e.target.value;
+    renderGrid();
+  });
+
+  applyI18n();
+  initData();
+})();
+</script>
