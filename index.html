@@ -524,7 +524,7 @@
   @media (max-width: 760px){ .bar .search{ order:3; flex-basis:100%; max-width:none; } }
   .page-head{ padding-block: 22px 4px; }
   .head-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
-  .page-head h1.headline{ font-size: clamp(1.9rem, 4vw, 2.8rem); margin:0 0 6px; }
+  .page-head h2.headline{ font-size: clamp(1.9rem, 4vw, 2.8rem); margin:0 0 6px; }
   .page-head p.lede{ margin:0 0 16px; font-size:.95rem; }
   .city-pill{
     position:relative; display:inline-flex; align-items:center; gap:6px; cursor:pointer;
@@ -613,7 +613,7 @@
 
   .page-head{ padding-block:10px 0; }
   .head-row{ align-items:center; }
-  body .page-head h1.headline{
+  body .page-head h2.headline{
     font-size: clamp(2.4rem, 6vw, 3.6rem); line-height:1.1; margin:0; color:var(--ink);
   }
   .city-pill{
@@ -681,7 +681,7 @@
   html[data-theme="dark"] .lang-toggle button[aria-pressed="true"]{ background:rgba(255,255,255,.2); color:#fff; }
   html[data-theme="dark"] .bar-actions .btn.primary{ background:#fff; color:#1b1206; border:0; }
   html[data-theme="dark"] .bar-actions .btn.primary:hover{ box-shadow:0 6px 16px rgba(0,0,0,.35); }
-  html[data-theme="dark"] body .page-head h1.headline,
+  html[data-theme="dark"] body .page-head h2.headline,
   html[data-theme="dark"] body .section-title{
     font-family:'Syne','Cairo',sans-serif !important; font-weight:800; color:#fff;
   }
@@ -694,9 +694,71 @@
   html[data-theme="dark"] .ev-date{ color:#9c9588; }
 
   .brand .logo-mark{ width:42px; height:42px; flex:none; display:block; }
+
+  /* page-head: chips + city pill on one row, no extra title */
+  .page-head{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding-block:6px 0; }
+  .page-head .chips{ flex:1 1 320px; min-width:0; margin-top:0; }
+  .page-head .city-pill{ flex:none; }
+
+  /* logo wordmark: refined, wide-tracked uppercase */
+  .brand .name{
+    font-family:'Poppins','Cairo',sans-serif; font-weight:500; font-size:1.05rem;
+    letter-spacing:.2em; text-transform:uppercase; color:var(--ink); line-height:1;
+  }
+
+  /* ===== splash screen: logo shown ~2s on first visit, then the site opens ===== */
+  #splash{
+    position:fixed; inset:0; z-index:99999; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:20px; padding:24px; text-align:center;
+    background: radial-gradient(circle at 50% 40%, #5a4016 0%, #2a1e10 55%, #17110b 100%);
+    animation: splashOut .5s ease 2s forwards;
+  }
+  #splash .splash-mark{ width:132px; height:132px; animation: splashPop .7s cubic-bezier(.2,.9,.3,1.2) both; }
+  #splash .splash-name{
+    font-family:'Poppins','Cairo',sans-serif; font-weight:500; font-size:1.35rem; letter-spacing:.3em;
+    color:#f6f1e7; padding-inline-start:.3em; animation: splashUp .6s ease .35s both;
+  }
+  #splash .splash-tag{
+    font-family:'Poppins','Cairo',sans-serif; font-size:.9rem; color:#c9b98f; animation: splashUp .6s ease .55s both;
+  }
+  @keyframes splashPop{ from{ opacity:0; transform:scale(.6) rotate(-12deg); } to{ opacity:1; transform:none; } }
+  @keyframes splashUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  @keyframes splashOut{ to{ opacity:0; visibility:hidden; } }
+  @media (prefers-reduced-motion: reduce){
+    #splash, #splash *{ animation-duration:.01s !important; animation-delay:0s !important; }
+    #splash{ animation: splashOut .3s ease 1.6s forwards !important; }
+  }
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true">
+  <svg class="splash-mark" viewBox="0 0 64 64"><defs>
+    <linearGradient id="sg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f7b733"/>
+      <stop offset="1" stop-color="#e2562f"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="url(#sg)"/>
+  <g fill="none" stroke="#fff" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 24h26"/><path d="M36 16l8 8-8 8"/>
+    <path d="M47 40H21"/><path d="M28 32l-8 8 8 8"/>
+  </g>
+</svg>
+  <div class="splash-name">IJA NBADLOU</div>
+  <div class="splash-tag">نبدلو بلا فلوس · Troc gratuit en Tunisie</div>
+</div>
+<script>
+(function(){
+  var el = document.getElementById("splash");
+  if(!el) return;
+  var seen = false;
+  try{ seen = sessionStorage.getItem("ija-splash") === "1"; }catch(e){}
+  if(seen){ el.parentNode.removeChild(el); return; }
+  try{ sessionStorage.setItem("ija-splash", "1"); }catch(e){}
+  setTimeout(function(){ if(el.parentNode){ el.parentNode.removeChild(el); } }, 2700);
+})();
+</script>
+
 
 <!-- icon sprite -->
 <svg width="0" height="0" style="position:absolute">
@@ -768,15 +830,67 @@
 
 <main class="wrap">
 
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <h1 class="headline"><span data-i18n="hero_line1">عندك حاجة ما تستعملهاش؟</span> <span class="pop" data-i18n="hero_line2">بدّلها!</span></h1>
+        <p class="lede" data-i18n="hero_lede">ايجا نبدلو: منصة تونسية للتبادل (troc) بلا فلوس. حط إعلان بإلي عندك، قول شنوة تحب بدّلو بيه، وتلاقى لي يبدّل معاك.</p>
+        <div class="hero-ctas">
+          <button class="btn primary" id="hero-post-btn" type="button" data-i18n="hero_cta1"></button>
+          <a class="btn ghost" href="#listings" data-i18n="hero_cta2"></a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 320 240" fill="none">
+          <ellipse cx="160" cy="205" rx="120" ry="14" fill="var(--board2)"/>
+          <g transform="translate(36,34) rotate(-6)">
+            <rect x="0" y="0" width="100" height="100" rx="8" fill="var(--paper)" stroke="var(--line)"/>
+            <circle cx="50" cy="-6" r="6" fill="var(--pin)"/>
+            <rect x="14" y="14" width="72" height="50" rx="4" fill="var(--board2)"/>
+            <path d="M34 48l10-14 9 10 7-8 12 12" stroke="var(--ink-soft)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="14" y="72" width="72" height="8" rx="4" fill="var(--line)"/>
+            <rect x="14" y="84" width="46" height="7" rx="3.5" fill="var(--line)"/>
+          </g>
+          <g transform="translate(184,54) rotate(5)">
+            <rect x="0" y="0" width="100" height="100" rx="8" fill="var(--paper)" stroke="var(--line)"/>
+            <circle cx="50" cy="-6" r="6" fill="var(--pin)"/>
+            <rect x="14" y="14" width="72" height="50" rx="4" fill="var(--board2)"/>
+            <rect x="34" y="28" width="32" height="24" rx="3" fill="none" stroke="var(--ink-soft)" stroke-width="3"/>
+            <path d="M40 52v6M60 52v6" stroke="var(--ink-soft)" stroke-width="3" stroke-linecap="round"/>
+            <rect x="14" y="72" width="72" height="8" rx="4" fill="var(--line)"/>
+            <rect x="14" y="84" width="52" height="7" rx="3.5" fill="var(--line)"/>
+          </g>
+          <g transform="translate(110,120)">
+            <circle cx="50" cy="50" r="46" fill="var(--accent)" opacity=".14"/>
+            <path d="M22 44l-9 9 9 9M13 53h38a11 11 0 0 1 11 11v3" stroke="var(--accent)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M78 56l9-9-9-9M87 47H49a11 11 0 0 1-11-11v-3" stroke="var(--accent2)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps" aria-label="How it works">
+    <div class="step">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-post"/></svg>
+      <div><h3 data-i18n="step1_t"></h3><p data-i18n="step1_d"></p></div>
+    </div>
+    <div class="step">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chat"/></svg>
+      <div><h3 data-i18n="step2_t"></h3><p data-i18n="step2_d"></p></div>
+    </div>
+    <div class="step">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-handshake"/></svg>
+      <div><h3 data-i18n="step3_t"></h3><p data-i18n="step3_d"></p></div>
+    </div>
+  </section>
+
   <section class="page-head">
-    <div class="head-row">
-      <h1 class="headline" data-i18n="page_title">التبادل في تونس</h1>
-      <label class="city-pill">
+    <div class="chips" id="chips"></div>
+    <label class="city-pill">
         <select id="city-filter" aria-label="City"></select>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-pin"/></svg>
       </label>
-    </div>
-    <div class="chips" id="chips"></div>
   </section>
 
   <section class="form-wrap" id="post-form-section" hidden>
@@ -2181,6 +2295,9 @@
       submitBtn.textContent = t("f_submit");
     });
   });
+
+  var heroPost = document.getElementById("hero-post-btn");
+  if(heroPost){ heroPost.addEventListener("click", openForm); }
 
   document.getElementById("search-input").addEventListener("input", function(e){
     state.query = e.target.value;
