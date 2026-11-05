@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#4a3513">
+<title>Pas de connexion | Ija Nbadlou</title>
+<style>
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; margin:0; }
+  body{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:24px; text-align:center;
+    background: radial-gradient(circle at 50% 35%, #5a4016 0%, #2a1e10 55%, #17110b 100%);
+    color:#f6f1e7; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Arabic", Tahoma, sans-serif;
+  }
+  svg{ width:112px; height:112px; }
+  h1{ margin:8px 0 0; font-size:1.5rem; }
+  p{ margin:0; max-width:34ch; line-height:1.6; color:#d9ccb4; }
+  button{
+    margin-top:10px; padding:12px 26px; border:0; border-radius:10px; cursor:pointer;
+    background:#f5a623; color:#1b1206; font:inherit; font-weight:700; font-size:1rem;
+  }
+  .name{ letter-spacing:.28em; font-weight:600; font-size:.95rem; color:#f6f1e7; opacity:.9; }
+</style>
+</head>
+<body>
+  <svg viewBox="0 0 64 64" aria-hidden="true">
+    <defs>
+      <linearGradient id="g" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#f7b733"/><stop offset="1" stop-color="#e2562f"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="30" fill="url(#g)"/>
+    <g fill="none" stroke="#fff" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 24h26"/><path d="M36 16l8 8-8 8"/><path d="M47 40H21"/><path d="M28 32l-8 8 8 8"/>
+    </g>
+  </svg>
+  <div class="name">IJA NBADLOU</div>
+  <h1>ما فماش إنترنات</h1>
+  <p>تأكد من الاتصال متاعك وعاود جرّب. الإعلانات تتحمل كي يرجع الإنترنات.</p>
+  <h1 dir="ltr" style="font-size:1.15rem;margin-top:14px">Pas de connexion</h1>
+  <p dir="ltr">Vérifie ta connexion internet et réessaie. Les annonces se chargent dès que le réseau revient.</p>
+  <button type="button" onclick="location.reload()">إعادة المحاولة · Réessayer</button>
+  <script>
+    window.addEventListener("online", function(){ location.reload(); });
+  </script>
+</body>
+</html>
