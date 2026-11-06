@@ -7,7 +7,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>Troc Tunisie | تبادل أغراض بلا فلوس – Ija Nbadlou</title>
 <meta name="description" content="Ija Nbadlou : موقع تونسي للتبادل (troc) بلا فلوس. حط إعلان، بدّل ملابس، إلكترونيك، كتب، موبيليا، لعب ورياضة مع ناس من كامل تونس. Échange d'objets gratuit en Tunisie, sans argent.">
-<meta name="keywords" content="تبادل, تبادل أغراض, تبادل في تونس, بدل بلا فلوس, نبدلو, ايجا نبدلو, إعلانات تونس, حوايج مستعملة, ملابس مستعملة, إلكترونيك مستعمل, موبيليا مستعملة, troc tunisie, échange tunisie, troc gratuit, échange d'objets, annonces gratuites tunisie, occasion tunisie, swap tunisia, barter tunisia, ija nbadlou, tunisie">
+<meta name="keywords" content="تبادل, تبادل أغراض, تبادل في تونس, بدل بلا فلوس, نبدلو, ايجا نبدلو, إعلانات تونس, حوايج مستعملة, ملابس مستعملة, إلكترونيك مستعمل, موبيليا مستعملة, troc jeux vidéo tunisie, échange jeux ps4 ps5, troc playstation tunisie, تبادل ألعاب بلايستيشن, troc tunisie, échange tunisie, troc gratuit, échange d'objets, annonces gratuites tunisie, occasion tunisie, swap tunisia, barter tunisia, ija nbadlou, tunisie">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="Ija Nbadlou">
 <meta name="theme-color" content="#bf4e2c">
@@ -781,6 +781,122 @@
   .foot-links a:hover, .foot-links button:hover{ opacity:1; }
   .foot-links button[hidden]{ display:none; }
   #m-views-wrap[hidden]{ display:none; }
+
+  /* ===== panneau de filtres + jeux vidéo ===== */
+  .fp{ position:fixed; inset:0; z-index:1100; }
+  .fp[hidden]{ display:none; }
+  .fp-backdrop{ position:absolute; inset:0; background:rgba(8,5,2,.6); backdrop-filter:blur(2px); animation: fpFade .2s ease both; }
+  .fp-sheet{
+    position:absolute; inset-block:0; inset-inline-end:0; width:min(460px,100%);
+    display:flex; flex-direction:column; background:var(--paper); color:var(--ink);
+    box-shadow:-12px 0 40px rgba(0,0,0,.35); animation: fpSlide .25s ease both;
+  }
+  .fp-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px 22px; border-bottom:1px solid var(--line); }
+  .fp-head h2{ margin:0; font-size:1.25rem; }
+  .fp-x{
+    width:38px; height:38px; border-radius:999px; border:1.5px solid var(--line); background:transparent; color:inherit;
+    display:inline-flex; align-items:center; justify-content:center; cursor:pointer; padding:0;
+  }
+  .fp-x svg{ width:18px; height:18px; }
+  .fp-body{ flex:1; overflow-y:auto; padding:6px 22px 18px; }
+  .fp-sec{ padding:16px 0; border-bottom:1px solid var(--line); }
+  .fp-sec:last-child{ border-bottom:0; }
+  .fp-sec h3{ margin:0 0 10px; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); font-weight:700; }
+  .fp-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .fp-chip{
+    display:inline-flex; align-items:center; gap:7px; cursor:pointer; font:inherit; font-size:.9rem; font-weight:500;
+    padding:8px 15px; border-radius:999px; color:var(--ink); background:transparent; border:1.5px solid var(--line);
+    transition: background .12s ease, border-color .12s ease;
+  }
+  .fp-chip:hover{ border-color:var(--accent); }
+  .fp-chip svg{ width:15px; height:15px; flex:none; }
+  .fp-chip[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .fp-select{
+    width:100%; margin-top:2px; font:inherit; padding:11px 14px; border-radius:10px; color:var(--ink);
+    background:var(--board2); border:1.5px solid var(--line); cursor:pointer;
+  }
+  .fp-sec .fp-select + .fp-select, .fp-chips + .fp-select{ margin-top:10px; }
+  .fp-select option{ color:#222; background:#fff; }
+  .fp-foot{ display:flex; gap:12px; padding:14px 22px 18px; border-top:1px solid var(--line); }
+  .fp-foot .btn{ flex:none; }
+  .fp-foot .btn.primary{ flex:1; justify-content:center; }
+  @keyframes fpFade{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes fpSlide{ from{ transform:translateX(24px); opacity:0; } to{ transform:none; opacity:1; } }
+  [dir="rtl"] .fp-sheet, html[lang="ar"] .fp-sheet{ box-shadow:12px 0 40px rgba(0,0,0,.35); }
+  @media (max-width: 640px){
+    .fp-sheet{ inset-block:auto 0; inset-inline:0; width:100%; max-height:90vh; border-radius:20px 20px 0 0; animation: fpUp .25s ease both; }
+    @keyframes fpUp{ from{ transform:translateY(40px); opacity:0; } to{ transform:none; opacity:1; } }
+  }
+  .plat-tag{
+    position:absolute; bottom:10px; inset-inline-start:10px; z-index:2; padding:4px 10px; border-radius:999px;
+    font-size:.74rem; font-weight:700; letter-spacing:.02em; color:#fff; background:rgba(14,52,150,.85); backdrop-filter:blur(3px);
+  }
+  .gaming-only[hidden]{ display:none; }
+
+  /* ===== barre latérale de filtres + carte de la Tunisie ===== */
+  .browse{ display:grid; grid-template-columns: 310px minmax(0,1fr); gap:30px; align-items:start; margin-top:18px; }
+  .results{ min-width:0; }
+  .side{
+    position:sticky; top:92px; max-height:calc(100vh - 110px); overflow-y:auto; padding:6px 20px 14px;
+    background:var(--paper); border:1px solid var(--line); border-radius:18px; scrollbar-width:thin;
+  }
+  html[data-theme="dark"] .side{ background:rgba(255,255,255,.06); border:0; }
+  .side-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; padding:14px 0 6px; }
+  .side-head h2{ margin:0; font-size:1.2rem; }
+  .side-count{ font-size:.82rem; color:var(--ink-soft); font-weight:600; }
+  .side-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:6px 0 4px; }
+  .side-reset{ background:none; border:0; padding:0; color:var(--accent); font:inherit; font-size:.85rem; font-weight:600; cursor:pointer; }
+  .side-reset:hover{ text-decoration:underline; }
+  .side .fp-sec{ padding:14px 0; }
+  .side .fp-sec h3{ font-size:.72rem; }
+  .side .fp-chip{ font-size:.84rem; padding:7px 13px; }
+  .page-head{ display:none; padding-block:0 6px; }
+  .page-head .city-pill, .page-head .pill-select{ display:none !important; }
+  .browse .ev-card{ width:290px; }
+  @media (max-width: 980px){
+    .browse{ grid-template-columns: minmax(0,1fr); gap:0; margin-top:6px; }
+    .side{ display:none; }
+    .page-head{ display:flex; }
+    .page-head .chips{ flex-wrap:wrap; overflow:visible; }
+    .browse .ev-card{ width:300px; }
+  }
+
+  .cmap{ width:100%; max-width:270px; margin:2px auto 0; }
+  .cmap svg{ width:100%; height:auto; display:block; overflow:visible; }
+  .cmap-land{ fill: color-mix(in srgb, var(--ink) 9%, transparent); stroke: color-mix(in srgb, var(--ink) 30%, transparent); stroke-width:1.2; stroke-linejoin:round; }
+  .cm{ cursor:pointer; outline:none; }
+  .cm-hit{ fill:transparent; }
+  .cm-dot{ fill:var(--accent); stroke:var(--paper); stroke-width:2; transition: r .12s ease; }
+  .cm.empty .cm-dot{ fill:var(--ink-soft); opacity:.55; }
+  .cm.on .cm-dot{ fill:var(--accent2); stroke:#fff; stroke-width:2.5; opacity:1; }
+  .cm:hover .cm-dot, .cm:focus-visible .cm-dot{ r:7.5; opacity:1; }
+  .cm-label{ font-size:9.5px; font-weight:600; fill:var(--ink); paint-order:stroke; stroke:var(--paper); stroke-width:3px; stroke-linejoin:round; pointer-events:none; }
+  html[data-theme="dark"] .cm-label{ stroke:#2a2118; }
+  .cm.on .cm-label{ fill:var(--accent2); font-weight:800; }
+  .cm-me{ fill:none; stroke:var(--accent2); stroke-width:1.5; stroke-dasharray:3 3; }
+  .cmap-bar{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+  .cmap-btn{
+    display:inline-flex; align-items:center; gap:6px; cursor:pointer; font:inherit; font-size:.82rem; font-weight:600;
+    padding:7px 13px; border-radius:999px; color:var(--ink); background:transparent; border:1.5px solid var(--line);
+  }
+  .cmap-btn svg{ width:14px; height:14px; }
+  .cmap-btn:hover{ border-color:var(--accent); }
+  .cmap-clear{ color:var(--accent2); border-color:var(--accent2); }
+  .cmap-hint{ margin:8px 0 0; font-size:.78rem; color:var(--ink-soft); text-align:center; }
+
+  /* ===== Mobile: textes plus petits ===== */
+  @media (max-width: 600px){
+    body{ font-size:14px; }
+    h1.headline, .hero-title, .hero h1{ font-size:1.75rem !important; line-height:1.15 !important; }
+    [lang="ar"] h1.headline{ font-size:1.6rem !important; }
+    .hero p, .hero .lead, .hero-sub{ font-size:.95rem !important; line-height:1.55 !important; }
+    .page-head h2.headline{ font-size:1.35rem !important; }
+    h2{ font-size:1.25rem; }
+    .ev-title{ font-size:.95rem; }
+    .btn, .bar .btn{ font-size:.9rem; padding-block:9px; }
+    .bar .search input{ font-size:.9rem; }
+    .modal-card h2, .modal-card h3{ font-size:1.2rem; }
+  }
 </style>
 </head>
 <body>
@@ -824,6 +940,7 @@
   <symbol id="ic-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
   <symbol id="ic-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
   <symbol id="ic-sofa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/><path d="M3 11h18v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5Z"/><path d="M5 17v3M19 17v3"/></symbol>
+  <symbol id="ic-gamepad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h4M8 9v4"/><path d="M15 12h.01M18 10h.01"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></symbol>
   <symbol id="ic-toy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a2.5 2.5 0 0 1 2.5 2.5c0 .7-.3 1.2-.7 1.7.5-.2 1-.3 1.6-.2a2.5 2.5 0 1 1-1.9 4.1c.4.5.5 1.1.5 1.4a2.5 2.5 0 1 1-4.5 1.5c-.1-.3 0-.9.4-1.5a2.5 2.5 0 1 1-1.9-4.1c.6-.1 1.1 0 1.6.2-.4-.5-.7-1-.7-1.7A2.5 2.5 0 0 1 12 2Z"/><circle cx="9" cy="17" r="2.5"/><circle cx="15" cy="17" r="2.5"/></symbol>
   <symbol id="ic-ball" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3c2.5 2.5 2.5 15.5 0 18M3 12h18M5.6 5.6c3 3 9.8 3 12.8 0M5.6 18.4c3-3 9.8-3 12.8 0"/></symbol>
   <symbol id="ic-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 7 9-4 9 4-9 4-9-4Z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></symbol>
@@ -938,15 +1055,6 @@
     </div>
   </section>
 
-  <section class="page-head">
-    <div class="chips" id="chips"></div>
-    <select id="my-city" class="pill-select" hidden></select>
-    <select id="sort-select" class="pill-select"></select>
-    <label class="city-pill">
-        <select id="city-filter" aria-label="City"></select>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-pin"/></svg>
-      </label>
-  </section>
 
   <section class="form-wrap" id="post-form-section" hidden>
     <h2 data-i18n="form_title"></h2>
@@ -959,6 +1067,14 @@
       <div class="field">
         <label for="f-cat" data-i18n="f_cat"></label>
         <select id="f-cat" required></select>
+      </div>
+      <div class="field gaming-only" hidden>
+        <label for="f-platform" data-i18n="f_platform"></label>
+        <select id="f-platform"></select>
+      </div>
+      <div class="field gaming-only" hidden>
+        <label for="f-gtype" data-i18n="f_gtype"></label>
+        <select id="f-gtype"></select>
       </div>
       <div class="field span2">
         <label for="f-desc" data-i18n="f_desc"></label>
@@ -999,6 +1115,18 @@
     </form>
   </section>
 
+  <div class="browse">
+    <aside class="side" id="side" aria-label="Filtres"></aside>
+    <div class="results">
+  <section class="page-head">
+    <div class="chips" id="chips"></div>
+    <select id="my-city" class="pill-select" hidden></select>
+    <select id="sort-select" class="pill-select"></select>
+    <label class="city-pill">
+        <select id="city-filter" aria-label="City"></select>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-pin"/></svg>
+      </label>
+  </section>
   <section id="listings">
     <p class="count-line"><span class="dot-live" id="live-dot"></span><span id="count-line"></span></p>
     <div id="rows"></div>
@@ -1008,12 +1136,14 @@
       <button class="btn primary" id="empty-post-btn" type="button" data-i18n="hero_cta1"></button>
     </div>
   </section>
+    </div>
+  </div>
 
   <article class="about" id="about" aria-label="Ija Nbadlou">
     <section lang="ar" dir="rtl">
       <h2>ايجا نبدلو: موقع التبادل (Troc) في تونس بلا فلوس</h2>
       <p><strong>ايجا نبدلو</strong> (Ija Nbadlou) بالدارجة التونسية معناها «تعال نبدلو». هو موقع تونسي <strong>مجاني</strong> لتبادل الأغراض: تحط إعلان بالحاجة إلي ما عادش تستعملها، تقول شنوة تحب تبدلها بيه، وتتواصل مع صاحب الإعلان على واتساب.</p>
-      <p>نبدلو <strong>ملابس، إلكترونيك، كتب، موبيليا، لعب ومعدات رياضة</strong> في تونس، أريانة، صفاقس، سوسة، بنزرت، نابل، المنستير، القيروان، قابس، قفصة، مدنين وباجة، بلا فلوس.</p>
+      <p>نبدلو <strong>ملابس، إلكترونيك، ألعاب فيديو (PlayStation، Xbox، CD)، كتب، موبيليا، لعب ومعدات رياضة</strong> في تونس، أريانة، صفاقس، سوسة، بنزرت، نابل، المنستير، القيروان، قابس، قفصة، مدنين وباجة، بلا فلوس.</p>
       <h3>شنوة هو ايجا نبدلو؟</h3>
       <p>منصة تونسية مجانية للتبادل بين الناس: حاجة بحاجة، بلا بيع وبلا شراء.</p>
       <h3>كيفاش نحط إعلان؟</h3>
@@ -1024,7 +1154,7 @@
     <section lang="fr" dir="ltr">
       <h2>Ija Nbadlou : le site de troc gratuit en Tunisie</h2>
       <p><strong>Ija Nbadlou</strong> signifie « viens, on échange » en dialecte tunisien. C'est une plateforme tunisienne <strong>gratuite</strong> d'échange d'objets : publie une annonce pour ce que tu n'utilises plus, indique ce que tu cherches en échange et contacte l'annonceur sur WhatsApp.</p>
-      <p>Échange <strong>vêtements, électronique, livres, meubles, jouets et articles de sport</strong> à Tunis, Ariana, Sfax, Sousse, Bizerte, Nabeul, Monastir, Kairouan, Gabès, Gafsa, Médenine et Béja, sans argent.</p>
+      <p>Échange <strong>vêtements, électronique, jeux vidéo (PlayStation, Xbox, CD), livres, meubles, jouets et articles de sport</strong> à Tunis, Ariana, Sfax, Sousse, Bizerte, Nabeul, Monastir, Kairouan, Gabès, Gafsa, Médenine et Béja, sans argent.</p>
       <h3>C'est quoi Ija Nbadlou ?</h3>
       <p>Une plateforme tunisienne de troc gratuit entre particuliers : un objet contre un autre, sans achat ni vente.</p>
       <h3>Comment publier une annonce ?</h3>
@@ -1047,6 +1177,23 @@
 </footer>
 
 <!-- listing detail modal -->
+<div class="fp" id="filter-panel" hidden role="dialog" aria-modal="true" aria-labelledby="fp-title">
+  <div class="fp-backdrop" data-fp-close></div>
+  <div class="fp-sheet">
+    <header class="fp-head">
+      <h2 id="fp-title"></h2>
+      <button type="button" class="fp-x" id="fp-x" data-fp-close>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+    <div class="fp-body" id="fp-body"></div>
+    <footer class="fp-foot">
+      <button type="button" class="btn" id="fp-reset"></button>
+      <button type="button" class="btn primary" id="fp-apply"></button>
+    </footer>
+  </div>
+</div>
+
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="m-title">
   <div class="modal-card" id="modal-card">
     <button class="modal-close" id="modal-close" type="button" data-i18n-aria="modal_close">
@@ -1214,7 +1361,32 @@
     notif_denied: {ar:"الإشعارات محجوبة من إعدادات المتصفح.", fr:"Notifications bloquées dans les réglages du navigateur."},
     notif_title: {ar:"رسالة جديدة في Ija Nbadlou", fr:"Nouveau message sur Ija Nbadlou"},
     net_offline: {ar:"ما فماش إنترنات", fr:"Hors connexion"},
-    net_online: {ar:"رجع الإنترنات ✅", fr:"De nouveau en ligne ✅"}
+    net_online: {ar:"رجع الإنترنات ✅", fr:"De nouveau en ligne ✅"},
+    /* filtres professionnels + gaming */
+    f_platform: {ar:"المنصة", fr:"Plateforme"},
+    f_gtype: {ar:"النوع", fr:"Type"},
+    fp_title: {ar:"تصفية الإعلانات", fr:"Filtrer les annonces"},
+    fp_cat: {ar:"الصنف", fr:"Catégorie"},
+    fp_platform: {ar:"المنصة", fr:"Plateforme"},
+    fp_type: {ar:"النوع", fr:"Type"},
+    fp_city: {ar:"المدينة", fr:"Ville"},
+    fp_date: {ar:"تاريخ النشر", fr:"Publiée"},
+    fp_avail: {ar:"التوفر", fr:"Disponibilité"},
+    fp_sort: {ar:"الترتيب", fr:"Trier par"},
+    all_word: {ar:"الكل", fr:"Tout"},
+    all_f: {ar:"الكل", fr:"Toutes"},
+    date_any: {ar:"في أي وقت", fr:"À tout moment"},
+    date_month: {ar:"آخر 30 يوم", fr:"30 derniers jours"},
+    avail_only: {ar:"الإعلانات المتوفرة فقط", fr:"Disponibles uniquement"},
+    fp_reset: {ar:"مسح الكل", fr:"Réinitialiser"},
+    fp_apply_one: {ar:"شوف إعلان واحد", fr:"Voir 1 résultat"},
+    fp_apply_n: {ar:"شوف {n} إعلان", fr:"Voir {n} résultats"},
+    fp_apply_none: {ar:"ما فماش نتائج", fr:"Aucun résultat"},
+    fp_close: {ar:"سكّر", fr:"Fermer"},
+    map_hint: {ar:"اضغط على مدينتك في الخريطة", fr:"Touche ta ville sur la carte"},
+    map_locate: {ar:"موقعي", fr:"Ma position"},
+    map_clear: {ar:"مسح المدينة", fr:"Effacer la ville"},
+    map_count: {ar:"إعلان", fr:"annonce(s)"}
   };
 
   var firebaseConfig = {
@@ -1230,12 +1402,27 @@
   var CATEGORIES = [
     {id:"clothing", icon:"ic-clothes", ar:"ملابس", fr:"Vêtements"},
     {id:"electronics", icon:"ic-chip", ar:"إلكترونيك", fr:"Électronique"},
+    {id:"gaming", icon:"ic-gamepad", ar:"ألعاب فيديو", fr:"Jeux vidéo"},
     {id:"books", icon:"ic-book", ar:"كتب", fr:"Livres"},
     {id:"furniture", icon:"ic-sofa", ar:"موبيليا", fr:"Meubles"},
     {id:"toys", icon:"ic-toy", ar:"لعب", fr:"Jouets"},
     {id:"sport", icon:"ic-ball", ar:"رياضة", fr:"Sport"},
     {id:"other", icon:"ic-box", ar:"أخرى", fr:"Autre"}
   ];
+  var PLATFORMS = [
+    {id:"ps5", label:"PS5"}, {id:"ps4", label:"PS4"}, {id:"ps3", label:"PS3 / PS2"},
+    {id:"xbox", label:"Xbox"}, {id:"switch", label:"Switch"}, {id:"pc", label:"PC"}, {id:"other", label:"Autre"}
+  ];
+  var GTYPES = [
+    {id:"game", ar:"لعبة (CD)", fr:"Jeu (CD)"},
+    {id:"console", ar:"كونسول (Play)", fr:"Console"},
+    {id:"accessory", ar:"إكسسوار (manette…)", fr:"Accessoire"}
+  ];
+  function platLabel(id){ for(var i = 0; i < PLATFORMS.length; i++){ if(PLATFORMS[i].id === id) return PLATFORMS[i].label; } return ""; }
+  function gtypeLabel(id){
+    for(var i = 0; i < GTYPES.length; i++){ if(GTYPES[i].id === id) return state.lang === "ar" ? GTYPES[i].ar : GTYPES[i].fr; }
+    return "";
+  }
   var catById = {};
   CATEGORIES.forEach(function(c){ catById[c.id] = c; });
 
@@ -1347,6 +1534,9 @@
     listings: [],
     activeCat: "all",
     favOnly: false,
+    platform: "all",
+    gtype: "all",
+    availableOnly: false,
     sort: (lsGet(SORT_KEY, "new") === "near" ? "near" : "new"),
     myCity: lsGet(MYCITY_KEY, ""),
     city: "all",
@@ -1404,6 +1594,9 @@
     buildSortControls();
     buildCitySelect();
     buildCatSelect();
+    buildGamingSelects();
+    updateGamingFields();
+    if(!fpEl.hidden){ renderFilterPanel(); }
     renderPreviews();
     renderGrid();
     if(openId){ renderModal(); renderChat(); }
@@ -1411,6 +1604,7 @@
 
   function resetFilters(){
     state.activeCat = "all"; state.dateFilter = "all"; state.city = "all"; state.query = ""; state.favOnly = false;
+    state.platform = "all"; state.gtype = "all"; state.availableOnly = false;
     var si = document.getElementById("search-input"); if(si) si.value = "";
     buildCityFilter(); buildChips(); renderGrid();
   }
@@ -1427,22 +1621,14 @@
       b.addEventListener("click", onClick);
       wrap.appendChild(b);
     }
-    var noFilters = state.activeCat === "all" && state.dateFilter === "all" && state.city === "all" && !state.query && !state.favOnly;
-    mk(t("cat_all"), noFilters, "ic-filter", resetFilters);
-    mk("\u2665 " + t("fav_title") + (favs.length ? " (" + favs.length + ")" : ""), state.favOnly, null, function(){
+    var nActive = activeFilterCount();
+    mk(t("cat_all") + (nActive ? " (" + nActive + ")" : ""), nActive > 0, "ic-filter", openFilterPanel);
+    mk("♥ " + t("fav_title") + (favs.length ? " (" + favs.length + ")" : ""), state.favOnly, null, function(){
       state.favOnly = !state.favOnly; buildChips(); renderGrid();
     });
-    CATEGORIES.forEach(function(c){
-      mk(state.lang === "ar" ? c.ar : c.fr, state.activeCat === c.id, c.icon, function(){
-        state.activeCat = (state.activeCat === c.id) ? "all" : c.id; buildChips(); renderGrid();
-      });
-    });
-    mk(t("filt_today"), state.dateFilter === "today", null, function(){
-      state.dateFilter = (state.dateFilter === "today") ? "all" : "today"; buildChips(); renderGrid();
-    });
-    mk(t("filt_week"), state.dateFilter === "week", null, function(){
-      state.dateFilter = (state.dateFilter === "week") ? "all" : "week"; buildChips(); renderGrid();
-    });
+    if(nActive > 0 || state.favOnly){
+      mk("✕ " + t("fp_reset"), false, null, resetAll);
+    }
   }
 
   function buildCityFilter(){
@@ -1471,6 +1657,25 @@
     if(prev) sel.value = prev;
   }
 
+  function buildGamingSelects(){
+    var ps = document.getElementById("f-platform"), gs = document.getElementById("f-gtype");
+    if(!ps || !gs) return;
+    var pPrev = ps.value, gPrev = gs.value;
+    ps.innerHTML = ""; gs.innerHTML = "";
+    PLATFORMS.forEach(function(pl){
+      var o = document.createElement("option"); o.value = pl.id; o.textContent = pl.label; ps.appendChild(o);
+    });
+    GTYPES.forEach(function(g){
+      var o = document.createElement("option"); o.value = g.id; o.textContent = state.lang === "ar" ? g.ar : g.fr; gs.appendChild(o);
+    });
+    if(pPrev) ps.value = pPrev;
+    if(gPrev) gs.value = gPrev;
+  }
+  function updateGamingFields(){
+    var on = document.getElementById("f-cat").value === "gaming";
+    Array.prototype.forEach.call(document.querySelectorAll(".gaming-only"), function(el){ el.hidden = !on; });
+  }
+
   function buildCatSelect(){
     var sel = document.getElementById("f-cat");
     var prev = sel.value;
@@ -1487,6 +1692,9 @@
     if(state.favOnly && !isFav(l.id)) return false;
     if(state.activeCat !== "all" && l.category !== state.activeCat) return false;
     if(state.city !== "all" && l.city !== state.city) return false;
+    if(state.availableOnly && l.status === "swapped") return false;
+    if(state.platform !== "all" && l.platform !== state.platform) return false;
+    if(state.gtype !== "all" && l.gtype !== state.gtype) return false;
     if(state.dateFilter !== "all"){
       var ts = l.createdAt || 0;
       if(state.dateFilter === "today"){
@@ -1494,13 +1702,333 @@
         if(ts < d0.getTime()) return false;
       } else if(state.dateFilter === "week"){
         if(ts < Date.now() - 7*86400000) return false;
+      } else if(state.dateFilter === "month"){
+        if(ts < Date.now() - 30*86400000) return false;
       }
     }
     if(state.query){
-      var hay = ((l.title||"") + " " + (l.desc||"") + " " + (l.want||"") + " " + (l.city||"")).toLowerCase();
+      var hay = ((l.title||"") + " " + (l.desc||"") + " " + (l.want||"") + " " + (l.city||"") + " " + platLabel(l.platform) + " " + (l.platform ? "playstation ps cd" : "")).toLowerCase();
       if(hay.indexOf(state.query.toLowerCase()) === -1) return false;
     }
     return true;
+  }
+
+  /* ---------- panneau de filtres ---------- */
+  function activeFilterCount(){
+    var n = 0;
+    if(state.activeCat !== "all") n++;
+    if(state.platform !== "all") n++;
+    if(state.gtype !== "all") n++;
+    if(state.city !== "all") n++;
+    if(state.dateFilter !== "all") n++;
+    if(state.availableOnly) n++;
+    if(state.sort === "near") n++;
+    return n;
+  }
+
+  function resetAll(){
+    resetFilters();
+    state.sort = "new";
+    lsSet(SORT_KEY, "new");
+    buildSortControls();
+    buildChips();
+    renderGrid();
+    if(!fpEl.hidden){ renderFilterPanel(); }
+  }
+
+  var fpEl = document.getElementById("filter-panel");
+  var fpOpener = null;
+
+  function openFilterPanel(){
+    fpOpener = document.activeElement;
+    fpEl.hidden = false;
+    document.body.style.overflow = "hidden";
+    renderFilterPanel();
+    document.getElementById("fp-x").focus();
+  }
+  function closeFilterPanel(){
+    if(fpEl.hidden) return;
+    fpEl.hidden = true;
+    document.body.style.overflow = "";
+    if(fpOpener && fpOpener.focus){ try{ fpOpener.focus(); }catch(e){} }
+  }
+  function fpRefresh(){
+    buildChips();
+    buildCityFilter();
+    buildSortControls();
+    renderGrid();
+    if(!fpEl.hidden){ renderFilterPanel(); }
+  }
+
+  /* ---------- carte de la Tunisie ---------- */
+  var TN_OUTLINE = [
+    [37.09,8.62],[37.00,8.80],[37.17,9.10],[37.23,9.25],[37.31,9.60],[37.34,9.78],[37.26,9.90],[37.17,10.19],
+    [36.95,10.30],[36.80,10.30],[36.72,10.36],[36.82,10.56],[36.93,10.80],[37.08,11.04],[36.95,11.10],[36.84,11.10],
+    [36.62,10.95],[36.45,10.76],[36.38,10.62],[36.12,10.48],[35.83,10.65],[35.78,10.84],[35.64,11.04],[35.50,11.06],
+    [35.24,11.12],[34.74,10.78],[34.53,10.50],[34.30,10.07],[33.88,10.10],[33.67,10.34],[33.50,11.12],[33.14,11.55],
+    [32.85,11.35],[32.45,11.00],[32.05,10.72],[31.50,10.30],[30.60,9.80],[30.24,9.55],[30.80,9.10],[31.50,9.00],
+    [32.20,8.40],[32.90,7.70],[33.40,7.60],[34.00,7.50],[34.50,8.00],[34.65,8.30],[35.20,8.35],[35.55,8.40],
+    [35.90,8.25],[36.20,8.30],[36.45,8.45],[36.65,8.55]
+  ];
+  // décalage de l'étiquette de chaque ville : [dx, dy, ancre]
+  var CITY_LABEL = {
+    "Bizerte":[9,-6,"start"], "Béja":[-9,3,"end"], "Ariana":[-8,-7,"end"], "Tunis":[-8,9,"end"], "Nabeul":[9,4,"start"],
+    "Sousse":[-8,4,"end"], "Monastir":[9,6,"start"], "Kairouan":[-9,4,"end"], "Sfax":[9,4,"start"], "Gafsa":[-9,4,"end"],
+    "Gabès":[9,4,"start"], "Médenine":[9,4,"start"]
+  };
+  var MAPV = {latMax:37.45, latMin:33.0, lonMin:7.45, lonMax:11.65, W:240, cos:0.82};
+  MAPV.k = MAPV.W / ((MAPV.lonMax - MAPV.lonMin) * MAPV.cos);
+  MAPV.H = Math.round((MAPV.latMax - MAPV.latMin) * MAPV.k);
+  function mapProj(lat, lon){
+    return [(lon - MAPV.lonMin) * MAPV.cos * MAPV.k, (MAPV.latMax - lat) * MAPV.k];
+  }
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function svgEl(name, attrs, parent){
+    var el = document.createElementNS(SVGNS, name);
+    Object.keys(attrs || {}).forEach(function(k){ el.setAttribute(k, attrs[k]); });
+    if(parent) parent.appendChild(el);
+    return el;
+  }
+
+  function buildCityMap(){
+    // nombre d'annonces par ville, avec les autres filtres appliqués (sans le filtre de ville)
+    var saved = state.city;
+    state.city = "all";
+    var counts = {};
+    state.listings.forEach(function(l){ if(matchesFilter(l)){ counts[l.city] = (counts[l.city] || 0) + 1; } });
+    state.city = saved;
+
+    var wrap = document.createElement("div");
+    wrap.className = "cmap";
+    var svg = svgEl("svg", {viewBox: "0 0 " + MAPV.W + " " + MAPV.H, role: "group", "aria-label": t("fp_city")}, wrap);
+    var defs = svgEl("defs", {}, svg);
+    var grad = svgEl("linearGradient", {id: "cmFade", x1: "0", y1: "0", x2: "0", y2: "1"}, defs);
+    svgEl("stop", {offset: "0.8", "stop-color": "#fff"}, grad);
+    svgEl("stop", {offset: "1", "stop-color": "#000"}, grad);
+    var mask = svgEl("mask", {id: "cmMask"}, defs);
+    svgEl("rect", {width: MAPV.W, height: MAPV.H, fill: "url(#cmFade)"}, mask);
+
+    var d = TN_OUTLINE.map(function(pt, i){
+      var xy = mapProj(pt[0], pt[1]);
+      return (i ? "L" : "M") + xy[0].toFixed(1) + " " + xy[1].toFixed(1);
+    }).join("") + "Z";
+    svgEl("path", {d: d, "class": "cmap-land", mask: "url(#cmMask)"}, svg);
+
+    CITIES.forEach(function(c){
+      var co = CITY_COORDS[c];
+      if(!co) return;
+      var xy = mapProj(co[0], co[1]);
+      var n = counts[c] || 0;
+      var on = state.city === c;
+      var g = svgEl("g", {
+        "class": "cm" + (on ? " on" : "") + (n === 0 ? " empty" : "") + (state.myCity === c ? " me" : ""),
+        transform: "translate(" + xy[0].toFixed(1) + " " + xy[1].toFixed(1) + ")",
+        tabindex: "0", role: "button", "aria-pressed": String(on),
+        "aria-label": c + " — " + n + " " + t("map_count")
+      }, svg);
+      svgEl("circle", {r: "7", "class": "cm-hit"}, g);
+      if(state.myCity === c){ svgEl("circle", {r: "11", "class": "cm-me"}, g); }
+      svgEl("circle", {r: on ? "7.5" : "5.5", "class": "cm-dot"}, g);
+      var lab = CITY_LABEL[c] || [9, 4, "start"];
+      var tx = svgEl("text", {x: lab[0], y: lab[1], "text-anchor": lab[2], "class": "cm-label"}, g);
+      tx.textContent = c;
+      var tt = svgEl("title", {}, g);
+      tt.textContent = c + " — " + n + " " + t("map_count");
+      function pick(){
+        state.city = (state.city === c) ? "all" : c;
+        fpRefresh();
+      }
+      g.addEventListener("click", pick);
+      g.addEventListener("keydown", function(e){
+        if(e.key === "Enter" || e.key === " "){ e.preventDefault(); pick(); }
+      });
+    });
+    return wrap;
+  }
+
+  function locateMe(){
+    if(!navigator.geolocation){ showToast(t("near_need_city")); return; }
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var c = nearestCity(pos.coords.latitude, pos.coords.longitude);
+      if(!c) return;
+      state.myCity = c; lsSet(MYCITY_KEY, c);
+      state.sort = "near"; lsSet(SORT_KEY, "near");
+      buildSortControls();
+      fpRefresh();
+    }, function(){ showToast(t("near_need_city")); }, {timeout: 8000, maximumAge: 600000});
+  }
+
+  /* ---------- sections de filtres (partagées : panneau mobile + barre latérale) ---------- */
+  function buildFilterSections(body){
+    function section(title){
+      var sec = document.createElement("section");
+      sec.className = "fp-sec";
+      var h = document.createElement("h3");
+      h.textContent = title;
+      sec.appendChild(h);
+      body.appendChild(sec);
+      return sec;
+    }
+    function chipRow(sec){
+      var row = document.createElement("div");
+      row.className = "fp-chips";
+      sec.appendChild(row);
+      return row;
+    }
+    function chip(row, label, active, onClick, iconId){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "fp-chip";
+      b.setAttribute("aria-pressed", String(active));
+      if(iconId){
+        b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#' + iconId + '"/></svg><span></span>';
+        b.querySelector("span").textContent = label;
+      } else {
+        b.textContent = label;
+      }
+      b.addEventListener("click", onClick);
+      row.appendChild(b);
+    }
+
+    // catégorie
+    var sec = section(t("fp_cat"));
+    var row = chipRow(sec);
+    chip(row, t("all_word"), state.activeCat === "all", function(){
+      state.activeCat = "all"; state.platform = "all"; state.gtype = "all"; fpRefresh();
+    });
+    CATEGORIES.forEach(function(c){
+      chip(row, state.lang === "ar" ? c.ar : c.fr, state.activeCat === c.id, function(){
+        state.activeCat = c.id;
+        if(c.id !== "gaming"){ state.platform = "all"; state.gtype = "all"; }
+        fpRefresh();
+      }, c.icon);
+    });
+
+    // plateforme + type (jeux vidéo)
+    if(state.activeCat === "gaming"){
+      sec = section(t("fp_platform"));
+      row = chipRow(sec);
+      chip(row, t("all_f"), state.platform === "all", function(){ state.platform = "all"; fpRefresh(); });
+      PLATFORMS.forEach(function(pl){
+        chip(row, pl.label, state.platform === pl.id, function(){ state.platform = pl.id; fpRefresh(); });
+      });
+      sec = section(t("fp_type"));
+      row = chipRow(sec);
+      chip(row, t("all_word"), state.gtype === "all", function(){ state.gtype = "all"; fpRefresh(); });
+      GTYPES.forEach(function(g){
+        chip(row, state.lang === "ar" ? g.ar : g.fr, state.gtype === g.id, function(){ state.gtype = g.id; fpRefresh(); });
+      });
+    }
+
+    // ville : carte de la Tunisie
+    sec = section(t("fp_city"));
+    sec.appendChild(buildCityMap());
+    var bar = document.createElement("div");
+    bar.className = "cmap-bar";
+    var loc = document.createElement("button");
+    loc.type = "button"; loc.className = "cmap-btn";
+    loc.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span></span>';
+    loc.querySelector("span").textContent = t("map_locate");
+    loc.addEventListener("click", locateMe);
+    bar.appendChild(loc);
+    if(state.city !== "all"){
+      var clr = document.createElement("button");
+      clr.type = "button"; clr.className = "cmap-btn cmap-clear";
+      clr.textContent = "✕ " + state.city;
+      clr.setAttribute("aria-label", t("map_clear"));
+      clr.title = t("map_clear");
+      clr.addEventListener("click", function(){ state.city = "all"; fpRefresh(); });
+      bar.appendChild(clr);
+    }
+    sec.appendChild(bar);
+    var hint = document.createElement("p");
+    hint.className = "cmap-hint";
+    hint.textContent = t("map_hint");
+    sec.appendChild(hint);
+
+    // date
+    sec = section(t("fp_date"));
+    row = chipRow(sec);
+    [["all", t("date_any")], ["today", t("filt_today")], ["week", t("filt_week")], ["month", t("date_month")]].forEach(function(dd){
+      chip(row, dd[1], state.dateFilter === dd[0], function(){ state.dateFilter = dd[0]; fpRefresh(); });
+    });
+
+    // disponibilité
+    sec = section(t("fp_avail"));
+    row = chipRow(sec);
+    chip(row, t("avail_only"), state.availableOnly, function(){ state.availableOnly = !state.availableOnly; fpRefresh(); });
+
+    // tri
+    sec = section(t("fp_sort"));
+    row = chipRow(sec);
+    chip(row, t("sort_new"), state.sort === "new", function(){ setSort("new"); fpRefresh(); });
+    chip(row, t("sort_near"), state.sort === "near", function(){ setSort("near"); fpRefresh(); });
+    if(state.sort === "near" && !state.myCity){
+      var tip = document.createElement("p");
+      tip.className = "cmap-hint";
+      tip.textContent = t("near_need_city");
+      sec.appendChild(tip);
+    }
+  }
+
+  function resultsLabel(n){
+    return state.lang === "ar" ? (n + " " + t("map_count")) : (n + (n === 1 ? " annonce" : " annonces"));
+  }
+
+  // fenêtre de filtres (mobile)
+  function renderFilterPanel(){
+    var body = document.getElementById("fp-body");
+    var scroll = body.scrollTop;
+    body.innerHTML = "";
+    document.getElementById("fp-title").textContent = t("fp_title");
+    document.getElementById("fp-x").setAttribute("aria-label", t("fp_close"));
+    buildFilterSections(body);
+    var n = state.listings.filter(matchesFilter).length;
+    document.getElementById("fp-reset").textContent = t("fp_reset");
+    var apply = document.getElementById("fp-apply");
+    apply.textContent = n === 0 ? t("fp_apply_none") : (n === 1 ? t("fp_apply_one") : t("fp_apply_n").replace("{n}", n));
+    body.scrollTop = scroll;
+  }
+
+  // barre latérale (ordinateur)
+  function renderSideFilters(){
+    var side = document.getElementById("side");
+    if(!side) return;
+    var scroll = side.scrollTop;
+    side.innerHTML = "";
+    var head = document.createElement("div");
+    head.className = "side-head";
+    var h = document.createElement("h2");
+    h.textContent = t("cat_all");
+    head.appendChild(h);
+    var n = state.listings.filter(matchesFilter).length;
+    var cnt = document.createElement("span");
+    cnt.className = "side-count";
+    cnt.textContent = resultsLabel(n);
+    head.appendChild(cnt);
+    side.appendChild(head);
+
+    var top = document.createElement("div");
+    top.className = "side-top";
+    var fav = document.createElement("button");
+    fav.type = "button";
+    fav.className = "fp-chip";
+    fav.setAttribute("aria-pressed", String(state.favOnly));
+    fav.textContent = "♥ " + t("fav_title") + (favs.length ? " (" + favs.length + ")" : "");
+    fav.addEventListener("click", function(){ state.favOnly = !state.favOnly; fpRefresh(); });
+    top.appendChild(fav);
+    if(activeFilterCount() > 0 || state.favOnly){
+      var rs = document.createElement("button");
+      rs.type = "button";
+      rs.className = "side-reset";
+      rs.textContent = "✕ " + t("fp_reset");
+      rs.addEventListener("click", resetAll);
+      top.appendChild(rs);
+    }
+    side.appendChild(top);
+
+    buildFilterSections(side);
+    side.scrollTop = scroll;
   }
 
   function sortListings(list){
@@ -1621,6 +2149,12 @@
     fb.innerHTML = HEART_SVG;
     fb.addEventListener("click", function(e){ e.stopPropagation(); toggleFav(l.id); });
     card.querySelector(".ev-photo").appendChild(fb);
+    if(l.platform){
+      var pt = document.createElement("span");
+      pt.className = "plat-tag";
+      pt.textContent = platLabel(l.platform) + (l.gtype ? " · " + gtypeLabel(l.gtype) : "");
+      card.querySelector(".ev-photo").appendChild(pt);
+    }
 
     var actions = card.querySelector(".tag-actions");
     if(l.ownerToken && ownerToken && l.ownerToken === ownerToken){
@@ -1665,6 +2199,7 @@
   }
 
   function renderGrid(){
+    renderSideFilters();
     var rows = document.getElementById("rows");
     var empty = document.getElementById("empty-state");
     var emptyText = document.getElementById("empty-text");
@@ -1692,7 +2227,7 @@
     }
     empty.hidden = true;
 
-    var filtersOn = state.activeCat !== "all" || state.query || state.dateFilter !== "all" || state.city !== "all" || state.favOnly || state.sort === "near";
+    var filtersOn = state.activeCat !== "all" || state.query || state.dateFilter !== "all" || state.city !== "all" || state.favOnly || state.sort === "near" || state.platform !== "all" || state.gtype !== "all" || state.availableOnly;
     if(filtersOn){
       addRow(rows, state.favOnly ? t("fav_title") : (state.sort === "near" ? t("sort_near") : t("sec_results")), filtered, true);
     } else {
@@ -1936,7 +2471,8 @@
 
     var catEl = document.getElementById("m-cat");
     catEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#'+cat.icon+'"/></svg><span></span>';
-    catEl.querySelector("span").textContent = state.lang === "ar" ? cat.ar : cat.fr;
+    catEl.querySelector("span").textContent = (state.lang === "ar" ? cat.ar : cat.fr) +
+      (l.platform ? " · " + platLabel(l.platform) : "") + (l.gtype ? " · " + gtypeLabel(l.gtype) : "");
     document.getElementById("m-title").textContent = l.title || "";
     document.getElementById("m-desc").textContent = l.desc || "";
     document.getElementById("m-want").textContent = l.want || "";
@@ -2683,6 +3219,10 @@
       createdAt: Date.now(),
       status: "available"
     };
+    if(listing.category === "gaming"){
+      listing.platform = document.getElementById("f-platform").value;
+      listing.gtype = document.getElementById("f-gtype").value;
+    }
     if(!state.dbReady){ listing.id = "u" + Date.now(); }
 
     submitBtn.disabled = true;
@@ -2696,6 +3236,7 @@
       pendingImgs = [];
       renderPreviews();
       buildCatSelect();
+      updateGamingFields();
       formSection.hidden = true;
       showToast(t("toast_posted"));
       document.getElementById("listings").scrollIntoView({behavior:"smooth", block:"start"});
@@ -2726,6 +3267,16 @@
   });
 
   document.getElementById("sort-select").addEventListener("change", function(e){ setSort(e.target.value); });
+
+  document.getElementById("f-cat").addEventListener("change", updateGamingFields);
+  fpEl.addEventListener("click", function(e){
+    if(e.target.closest("[data-fp-close]")){ closeFilterPanel(); }
+  });
+  document.getElementById("fp-apply").addEventListener("click", closeFilterPanel);
+  document.getElementById("fp-reset").addEventListener("click", resetAll);
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && !fpEl.hidden){ closeFilterPanel(); }
+  });
   document.getElementById("my-city").addEventListener("change", function(e){
     state.myCity = e.target.value;
     lsSet(MYCITY_KEY, state.myCity);
