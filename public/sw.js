@@ -1,95 +1,77 @@
 /* Ija Nbadlou — service worker
- * - pages : réseau d'abord, page "pas de connexion" si hors ligne
- * - fichiers statiques du site (icônes, manifest) : cache d'abord, mis à jour en arrière-plan
- * - polices Google : mises en cache après la première visite
- * - jamais de cache pour Firestore / API / images d'annonces
- */
-const VERSION = "ija-v1";
-const SHELL = ["/offline.html", "/manifest.webmanifest", "/icons/icon-192.png", "/icons/icon-512.png"];
+   - network-first for pages (so a new index.html shows up immediately), cache as offline fallback
+   - never touches Firebase / Google / fonts requests (only same-origin GET)
+   - shows notifications and focuses/opens the right listing when tapped */
+var CACHE = "ija-v1";
+var SHELL = ["/", "/index.html", "/manifest.webmanifest", "/icons/icon-192.png", "/icons/icon-512.png"];
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(VERSION).then((cache) =>
-      Promise.all(SHELL.map((url) => cache.add(url).catch(() => null)))
-    ).then(() => self.skipWaiting())
+self.addEventListener("install", function (e) {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(function (c) { return c.addAll(SHELL); })
+      .catch(function () { /* a missing file must not block install */ })
+      .then(function () { return self.skipWaiting(); })
   );
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
+self.addEventListener("activate", function (e) {
+  e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
+      .then(function (keys) {
+        return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); }));
+      })
+      .then(function () { return self.clients.claim(); })
   );
 });
 
-function isFont(url) {
-  return url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com";
-}
-
-self.addEventListener("fetch", (event) => {
-  const req = event.request;
+self.addEventListener("fetch", function (e) {
+  var req = e.request;
   if (req.method !== "GET") return;
-  const url = new URL(req.url);
+  var url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;          // Firebase, fonts, gstatic… go straight to the network
 
-  // pages : réseau d'abord, sinon écran "pas de connexion"
   if (req.mode === "navigate") {
-    event.respondWith(
-      fetch(req).catch(() => caches.match("/offline.html"))
+    // /annonce/xyz, /a-propos … all served by the single index.html
+    e.respondWith(
+      fetch(req).then(function (res) {
+        var copy = res.clone();
+        caches.open(CACHE).then(function (c) { c.put("/index.html", copy); }).catch(function () {});
+        return res;
+      }).catch(function () {
+        return caches.match("/index.html").then(function (r) {
+          return r || new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } });
+        });
+      })
     );
     return;
   }
 
-  const sameOrigin = url.origin === self.location.origin;
-
-  // images d'annonces et sitemap : toujours depuis le réseau
-  if (sameOrigin && (url.pathname.startsWith("/img/") || url.pathname === "/sitemap.xml")) return;
-
-  // polices : cache d'abord
-  if (isFont(url)) {
-    event.respondWith(
-      caches.open(VERSION).then((cache) =>
-        cache.match(req).then((hit) =>
-          hit || fetch(req).then((res) => {
-            if (res && (res.ok || res.type === "opaque")) cache.put(req, res.clone());
-            return res;
-          })
-        )
-      )
-    );
-    return;
-  }
-
-  // fichiers statiques du site : cache d'abord + mise à jour en arrière-plan
-  if (sameOrigin && (url.pathname.startsWith("/icons/") || url.pathname === "/manifest.webmanifest")) {
-    event.respondWith(
-      caches.open(VERSION).then((cache) =>
-        cache.match(req).then((hit) => {
-          const net = fetch(req).then((res) => {
-            if (res && res.ok) cache.put(req, res.clone());
-            return res;
-          }).catch(() => hit);
-          return hit || net;
-        })
-      )
-    );
-  }
-  // tout le reste (Firestore, Firebase, API) : réseau normal
+  e.respondWith(
+    fetch(req).then(function (res) {
+      if (res && res.ok) {
+        var copy = res.clone();
+        caches.open(CACHE).then(function (c) { c.put(req, copy); }).catch(function () {});
+      }
+      return res;
+    }).catch(function () {
+      return caches.match(req).then(function (r) { return r || Response.error(); });
+    })
+  );
 });
 
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-  const target = (event.notification.data && event.notification.data.url) || "/";
-  event.waitUntil(
-    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
-      for (const c of list) {
+self.addEventListener("notificationclick", function (e) {
+  e.notification.close();
+  var target = (e.notification.data && e.notification.data.url) || "/";
+  e.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(function (list) {
+      for (var i = 0; i < list.length; i++) {
+        var c = list[i];
         if ("focus" in c) {
-          c.focus();
-          if ("navigate" in c) { try { c.navigate(target); } catch (e) { /* ignore */ } }
-          return;
+          if ("navigate" in c) { try { c.navigate(target); } catch (err) {} }
+          return c.focus();
         }
       }
-      return self.clients.openWindow(target);
+      if (self.clients.openWindow) return self.clients.openWindow(target);
     })
   );
 });
