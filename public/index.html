@@ -2947,7 +2947,8 @@
     var dbg = document.createElement("p");
     dbg.style.cssText = "margin:8px 0 0;font-size:.72rem;color:var(--ink-soft);word-break:break-all;user-select:all";
     dbg.textContent = "UID : " + authUser.uid + " · " + (adminInfo || "admin : ?");
-    body.appendChild(dbg);
+    // visible seulement pour l'administrateur, ou avec ?debug=1 dans l'adresse
+    if(adminFlag || /[?&]debug=1/.test(window.location.search)){ body.appendChild(dbg); }
   }
   function renderInbox(){
     var body = document.getElementById("inbox-body");
