@@ -20,11 +20,7 @@
 <meta property="og:title" content="Ija Nbadlou | نبدلو بلا فلوس">
 <meta property="og:description" content="انشر إعلانك وبدّل أغراضك مع ناس من كامل تونس. Troc gratuit en Tunisie.">
 <meta property="og:url" content="https://ija-nbadlou.tn/">
-<meta property="og:image" content="/og-default.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="/og-default.png">
+<meta name="twitter:card" content="summary">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -579,36 +575,17 @@
 
   /* ---------- about / FAQ (static SEO text) ---------- */
   .about{
-    position:relative;
-    background: var(--paper); border:1px solid var(--line); border-radius:18px;
-    padding: 32px 36px; margin-block: clamp(56px, 8vw, 96px) 48px; box-shadow: 0 8px 22px var(--shadow);
-    display:grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items:start;
+    background: var(--paper); border:1px solid var(--line); border-radius:14px;
+    padding: 22px; margin-block: 0 40px; box-shadow: 0 8px 22px var(--shadow);
+    display:grid; grid-template-columns: 1fr 1fr; gap: 26px;
   }
-  .about::before{            /* thin divider between the Arabic and French columns */
-    content:""; position:absolute; top:32px; bottom:32px; left:50%; width:1px; background:var(--line);
-  }
-  @media (max-width: 760px){
-    .about{ grid-template-columns: 1fr; gap:28px; padding:22px 18px; margin-block: 40px 32px; }
-    .about::before{ display:none; }
-    .about section + section{ border-top:1px solid var(--line); padding-top:24px; }
-  }
+  @media (max-width: 760px){ .about{ grid-template-columns: 1fr; } }
   .about section{ min-width:0; }
-  .about h2{ margin:0 0 12px; font-size:1.3rem; line-height:1.3; }
-  .about p{ margin:0 0 10px; font-size:.9rem; color: var(--ink-soft); line-height:1.7; }
-  .about p.about-lead{ font-size:.95rem; }
+  .about h2{ margin:0 0 8px; font-size:1.3rem; line-height:1.3; }
+  .about h3{ margin:16px 0 4px; font-size:.98rem; color: var(--accent2); }
+  .about p{ margin:0 0 8px; font-size:.9rem; color: var(--ink-soft); line-height:1.6; }
   .about strong{ color: var(--ink); }
   .about [lang="ar"]{ font-family:'Cairo','Work Sans',sans-serif; }
-  .faq{ margin-top:18px; border-top:1px solid var(--line); }
-  .faq details{ border-bottom:1px solid var(--line); }
-  .faq summary{
-    list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px;
-    padding:13px 2px; font-weight:600; font-size:.95rem; color: var(--ink);
-  }
-  .faq summary::-webkit-details-marker{ display:none; }
-  .faq summary::after{ content:"+"; flex:none; font-size:1.3rem; line-height:1; color: var(--accent2); transition: transform .2s ease; }
-  .faq details[open] summary::after{ content:"\2212"; }
-  .faq summary:hover{ color: var(--accent2); }
-  .faq details p{ padding:0 2px 14px; margin:0; }
 
   @media (prefers-reduced-motion: reduce){
     *{ transition: none !important; animation: none !important; }
@@ -907,63 +884,18 @@
   .cmap-clear{ color:var(--accent2); border-color:var(--accent2); }
   .cmap-hint{ margin:8px 0 0; font-size:.78rem; color:var(--ink-soft); text-align:center; }
 
-  /* ---------- signaler + sélecteur ville ---------- */
-  .rep-wrap{ margin-top:16px; padding-top:12px; border-top:1px dashed var(--line); }
-  .rep-wrap[hidden]{ display:none; }
-  .rep-link{
-    background:none; border:0; padding:4px 0; font:inherit; font-size:.82rem; color:var(--ink-soft); cursor:pointer;
-    display:inline-flex; align-items:center; gap:6px;
-  }
-  .rep-link:hover{ color:var(--accent); }
-  .rep-link svg{ width:14px; height:14px; flex:none; }
-  .rep-panel{ display:flex; flex-direction:column; gap:10px; }
-  .rep-panel[hidden]{ display:none; }
-  .rep-btns{ display:flex; gap:8px; flex-wrap:wrap; }
-  .rep-btns .btn{ padding:9px 16px; font-size:.88rem; }
-  .rep-btns .btn[disabled]{ opacity:.5; cursor:not-allowed; }
-  .fp-select{
-    width:100%; margin-top:10px; padding:10px 14px; border-radius:12px; font:inherit; font-size:.9rem;
-    color:var(--ink); background:var(--paper); border:1.5px solid var(--line);
-  }
-
-  /* ===== MOBILE TYPE SCALE: smaller, app-like text on phones (desktop untouched) ===== */
-  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  /* ===== Mobile: textes plus petits ===== */
   @media (max-width: 600px){
-    html{ font-size:14px; }                       /* every rem value shrinks ~12% */
-    header.bar{ position:relative; top:auto; }    /* 3-row header no longer eats 1/5 of the screen or hides the form title */
-    .step p{ line-height:1.45; }
-    .bar-inner{ padding-block:12px; gap:10px; }
-    .brand .name{ font-size:.95rem; letter-spacing:.14em; }
-    .brand .logo-mark{ width:34px; height:34px; }
-    .bar .search{ padding:10px 16px; margin-inline-start:0; }
+    body{ font-size:14px; }
+    h1.headline, .hero-title, .hero h1{ font-size:1.75rem !important; line-height:1.15 !important; }
+    [lang="ar"] h1.headline{ font-size:1.6rem !important; }
+    .hero p, .hero .lead, .hero-sub{ font-size:.95rem !important; line-height:1.55 !important; }
+    .page-head h2.headline{ font-size:1.35rem !important; }
+    h2{ font-size:1.25rem; }
+    .ev-title{ font-size:.95rem; }
+    .btn, .bar .btn{ font-size:.9rem; padding-block:9px; }
     .bar .search input{ font-size:.9rem; }
-    .bar-actions .btn.primary{ padding:9px 14px; font-size:.88rem; }
-    .theme-toggle{ width:36px; height:36px; }
-    .theme-toggle svg{ width:18px; height:18px; }
-
-    h1.headline, [lang="ar"] h1.headline{ font-size:1.9rem; line-height:1.2; }
-    [lang="ar"] h1.headline{ font-size:1.75rem; }
-    p.lede{ font-size:1rem; line-height:1.6; }
-    body .page-head h2.headline{ font-size:1.6rem; }
-    body .section-title{ font-size:1.45rem; margin:28px 0 12px; }
-    .page-head .chip{ font-size:.85rem; padding:7px 14px; }
-    .city-pill{ padding:8px 16px; }
-
-    .ev-card{ width:68vw; }
-    .ev-body{ padding:10px 10px 16px; }
-    .ev-title{ font-size:1rem; }
-    .ev-sub{ font-size:.88rem; }
-    .ev-date{ font-size:.82rem; }
-
-    .step h3{ font-size:.92rem; }
-    .step p{ font-size:.82rem; }
-    .about h2{ font-size:1.15rem; }
-    .about h3{ font-size:.92rem; }
-    .about p{ font-size:.85rem; }
-
-    .modal-info h2{ font-size:1.25rem; }
-    .form-wrap h2, [lang="ar"] .form-wrap h2{ font-size:1.3rem; }
-    .field input, .field select, .field textarea{ font-size:16px; }  /* 16px stops iOS zooming on focus */
+    .modal-card h2, .modal-card h3{ font-size:1.2rem; }
   }
 </style>
 </head>
@@ -1152,10 +1084,6 @@
         <label for="f-want" data-i18n="f_want"></label>
         <input id="f-want" required maxlength="80">
       </div>
-      <div class="field span2">
-        <label for="f-wantcat" data-i18n="f_wantcat"></label>
-        <select id="f-wantcat"></select>
-      </div>
       <div class="field">
         <label for="f-city" data-i18n="f_city"></label>
         <select id="f-city" required></select>
@@ -1214,23 +1142,25 @@
   <article class="about" id="about" aria-label="Ija Nbadlou">
     <section lang="ar" dir="rtl">
       <h2>ايجا نبدلو: موقع التبادل (Troc) في تونس بلا فلوس</h2>
-      <p class="about-lead"><strong>ايجا نبدلو</strong> (Ija Nbadlou) بالدارجة التونسية معناها «تعال نبدلو». هو موقع تونسي <strong>مجاني</strong> لتبادل الأغراض: تحط إعلان بالحاجة إلي ما عادش تستعملها، تقول شنوة تحب تبدلها بيه، وتتواصل مع صاحب الإعلان على واتساب.</p>
+      <p><strong>ايجا نبدلو</strong> (Ija Nbadlou) بالدارجة التونسية معناها «تعال نبدلو». هو موقع تونسي <strong>مجاني</strong> لتبادل الأغراض: تحط إعلان بالحاجة إلي ما عادش تستعملها، تقول شنوة تحب تبدلها بيه، وتتواصل مع صاحب الإعلان على واتساب.</p>
       <p>نبدلو <strong>ملابس، إلكترونيك، ألعاب فيديو (PlayStation، Xbox، CD)، كتب، موبيليا، لعب ومعدات رياضة</strong> في تونس، أريانة، صفاقس، سوسة، بنزرت، نابل، المنستير، القيروان، قابس، قفصة، مدنين وباجة، بلا فلوس.</p>
-      <div class="faq">
-        <details><summary>شنوة هو ايجا نبدلو؟</summary><p>منصة تونسية مجانية للتبادل بين الناس: حاجة بحاجة، بلا بيع وبلا شراء.</p></details>
-        <details><summary>كيفاش نحط إعلان؟</summary><p>اضغط على «حط إعلان»، زيد صور واسم الحاجة وشنوة تحب بدالها، وإعلانك يبان فورا للجميع.</p></details>
-        <details><summary>الموقع ببلاش؟</summary><p>إيه، النشر والتواصل مجانيين. التبادل يتم بينك وبين الطرف الآخر مباشرة.</p></details>
-      </div>
+      <h3>شنوة هو ايجا نبدلو؟</h3>
+      <p>منصة تونسية مجانية للتبادل بين الناس: حاجة بحاجة، بلا بيع وبلا شراء.</p>
+      <h3>كيفاش نحط إعلان؟</h3>
+      <p>اضغط على «حط إعلان»، زيد صور واسم الحاجة وشنوة تحب بدالها، وإعلانك يبان فورا للجميع.</p>
+      <h3>الموقع ببلاش؟</h3>
+      <p>إيه، النشر والتواصل مجانيين. التبادل يتم بينك وبين الطرف الآخر مباشرة.</p>
     </section>
     <section lang="fr" dir="ltr">
       <h2>Ija Nbadlou : le site de troc gratuit en Tunisie</h2>
-      <p class="about-lead"><strong>Ija Nbadlou</strong> signifie « viens, on échange » en dialecte tunisien. C'est une plateforme tunisienne <strong>gratuite</strong> d'échange d'objets : publie une annonce pour ce que tu n'utilises plus, indique ce que tu cherches en échange et contacte l'annonceur sur WhatsApp.</p>
+      <p><strong>Ija Nbadlou</strong> signifie « viens, on échange » en dialecte tunisien. C'est une plateforme tunisienne <strong>gratuite</strong> d'échange d'objets : publie une annonce pour ce que tu n'utilises plus, indique ce que tu cherches en échange et contacte l'annonceur sur WhatsApp.</p>
       <p>Échange <strong>vêtements, électronique, jeux vidéo (PlayStation, Xbox, CD), livres, meubles, jouets et articles de sport</strong> à Tunis, Ariana, Sfax, Sousse, Bizerte, Nabeul, Monastir, Kairouan, Gabès, Gafsa, Médenine et Béja, sans argent.</p>
-      <div class="faq">
-        <details><summary>C'est quoi Ija Nbadlou ?</summary><p>Une plateforme tunisienne de troc gratuit entre particuliers : un objet contre un autre, sans achat ni vente.</p></details>
-        <details><summary>Comment publier une annonce ?</summary><p>Clique sur « Publier une annonce », ajoute des photos, le nom de l'objet et ce que tu veux en échange. Elle est visible tout de suite.</p></details>
-        <details><summary>Est-ce vraiment gratuit ?</summary><p>Oui, publier et contacter sont gratuits. L'échange se fait directement entre les deux personnes.</p></details>
-      </div>
+      <h3>C'est quoi Ija Nbadlou ?</h3>
+      <p>Une plateforme tunisienne de troc gratuit entre particuliers : un objet contre un autre, sans achat ni vente.</p>
+      <h3>Comment publier une annonce ?</h3>
+      <p>Clique sur « Publier une annonce », ajoute des photos, le nom de l'objet et ce que tu veux en échange. Elle est visible tout de suite.</p>
+      <h3>Est-ce vraiment gratuit ?</h3>
+      <p>Oui, publier et contacter sont gratuits. L'échange se fait directement entre les deux personnes.</p>
     </section>
   </article>
 
@@ -1430,24 +1360,6 @@
     notif_on: {ar:"الإشعارات تفعلت ✅", fr:"Notifications activées ✅"},
     notif_denied: {ar:"الإشعارات محجوبة من إعدادات المتصفح.", fr:"Notifications bloquées dans les réglages du navigateur."},
     notif_title: {ar:"رسالة جديدة في Ija Nbadlou", fr:"Nouveau message sur Ija Nbadlou"},
-    f_wantcat: {ar:"صنف الحاجة إلي تحب عليها", fr:"Catégorie recherchée en échange"},
-    want_any: {ar:"أي حاجة (مفتوح لكل الأصناف)", fr:"Peu importe (ouvert à tout)"},
-    fp_want: {ar:"نبدلو مع (شنوة يحب)", fr:"Échangeable contre"},
-    near_chip: {ar:"قريب مني", fr:"Près de moi"},
-    my_city_label: {ar:"مدينتي", fr:"Ma ville"},
-    want_label_cat: {ar:"يحب", fr:"Cherche"},
-    rep_btn: {ar:"أبلّغ على هذا الإعلان", fr:"Signaler cette annonce"},
-    rep_title: {ar:"علاش تبلّغ؟", fr:"Pourquoi signaler ?"},
-    rep_spam: {ar:"سبام / إعلان مكرر", fr:"Spam / doublon"},
-    rep_fake: {ar:"إعلان مزيف / تصاور ما تخصّش", fr:"Fausse annonce / photos trompeuses"},
-    rep_forbidden: {ar:"حاجة ممنوعة", fr:"Objet interdit"},
-    rep_scam: {ar:"نصب / يطلب فلوس", fr:"Arnaque / demande d'argent"},
-    rep_other: {ar:"سبب آخر", fr:"Autre"},
-    rep_send: {ar:"ابعث البلاغ", fr:"Envoyer le signalement"},
-    rep_cancel: {ar:"إلغاء", fr:"Annuler"},
-    rep_done: {ar:"يعطيك الصحة، البلاغ وصل ✅ — الإعلان ما عادش يبان عندك.", fr:"Merci, signalement envoyé ✅ — l'annonce est masquée pour toi."},
-    rep_error: {ar:"ما نجمش نبعث البلاغ، عاود.", fr:"Impossible d'envoyer le signalement, réessaie."},
-    auth_wait: {ar:"الاتصال مازال يتحضّر، عاود بعد ثواني.", fr:"Connexion en cours, réessaie dans quelques secondes."},
     net_offline: {ar:"ما فماش إنترنات", fr:"Hors connexion"},
     net_online: {ar:"رجع الإنترنات ✅", fr:"De nouveau en ligne ✅"},
     /* filtres professionnels + gaming */
@@ -1524,12 +1436,10 @@
   /* ---------- helpers: URL, favoris, tri par proximité ---------- */
   var canPush = /^https?:$/.test(window.location.protocol);
   var FAV_KEY = "ijanbadlou_favs";
-  var REPORTED_KEY = "ijanbadlou_reported";
   var SORT_KEY = "ijanbadlou_sort";
   var MYCITY_KEY = "ijanbadlou_mycity";
   function lsGet(k, d){ try{ var v = localStorage.getItem(k); return v === null ? d : v; }catch(e){ return d; } }
   function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
-  var reported = (function(){ try{ return JSON.parse(lsGet(REPORTED_KEY, "{}")) || {}; }catch(e){ return {}; } })();
 
   var favs = (function(){
     try{ var a = JSON.parse(lsGet(FAV_KEY, "[]")); return Array.isArray(a) ? a : []; }catch(e){ return []; }
@@ -1627,7 +1537,6 @@
     platform: "all",
     gtype: "all",
     availableOnly: false,
-    wantCat: "all",   // "Tbadlou m3a": only listings whose owner wants this category (or is open to anything)
     sort: (lsGet(SORT_KEY, "new") === "near" ? "near" : "new"),
     myCity: lsGet(MYCITY_KEY, ""),
     city: "all",
@@ -1695,7 +1604,7 @@
 
   function resetFilters(){
     state.activeCat = "all"; state.dateFilter = "all"; state.city = "all"; state.query = ""; state.favOnly = false;
-    state.platform = "all"; state.gtype = "all"; state.availableOnly = false; state.wantCat = "all";
+    state.platform = "all"; state.gtype = "all"; state.availableOnly = false;
     var si = document.getElementById("search-input"); if(si) si.value = "";
     buildCityFilter(); buildChips(); renderGrid();
   }
@@ -1714,9 +1623,6 @@
     }
     var nActive = activeFilterCount();
     mk(t("cat_all") + (nActive ? " (" + nActive + ")" : ""), nActive > 0, "ic-filter", openFilterPanel);
-    mk("📍 " + t("near_chip"), state.sort === "near", null, function(){
-      setSort(state.sort === "near" ? "new" : "near"); buildChips();
-    });
     mk("♥ " + t("fav_title") + (favs.length ? " (" + favs.length + ")" : ""), state.favOnly, null, function(){
       state.favOnly = !state.favOnly; buildChips(); renderGrid();
     });
@@ -1780,27 +1686,10 @@
       sel.appendChild(o);
     });
     if(prev) sel.value = prev;
-    buildWantCatSelect();
-  }
-
-  function buildWantCatSelect(){
-    var ws = document.getElementById("f-wantcat");
-    if(!ws) return;
-    var prevW = ws.value;
-    ws.innerHTML = "";
-    var oa = document.createElement("option"); oa.value = "any"; oa.textContent = t("want_any"); ws.appendChild(oa);
-    CATEGORIES.forEach(function(c){
-      var o = document.createElement("option");
-      o.value = c.id; o.textContent = state.lang === "ar" ? c.ar : c.fr;
-      ws.appendChild(o);
-    });
-    ws.value = prevW || "any";
   }
 
   function matchesFilter(l){
-    if(reported[l.id]) return false;
     if(state.favOnly && !isFav(l.id)) return false;
-    if(state.wantCat !== "all" && l.wantCat !== state.wantCat && l.wantCat !== "any") return false;
     if(state.activeCat !== "all" && l.category !== state.activeCat) return false;
     if(state.city !== "all" && l.city !== state.city) return false;
     if(state.availableOnly && l.status === "swapped") return false;
@@ -1833,7 +1722,6 @@
     if(state.city !== "all") n++;
     if(state.dateFilter !== "all") n++;
     if(state.availableOnly) n++;
-    if(state.wantCat !== "all") n++;
     if(state.sort === "near") n++;
     return n;
   }
@@ -2016,16 +1904,6 @@
       }, c.icon);
     });
 
-    // "tbadlou m3a" : ce que l'annonceur cherche en échange
-    sec = section(t("fp_want"));
-    row = chipRow(sec);
-    chip(row, t("all_word"), state.wantCat === "all", function(){ state.wantCat = "all"; fpRefresh(); });
-    CATEGORIES.forEach(function(c){
-      chip(row, state.lang === "ar" ? c.ar : c.fr, state.wantCat === c.id, function(){
-        state.wantCat = (state.wantCat === c.id ? "all" : c.id); fpRefresh();
-      }, c.icon);
-    });
-
     // plateforme + type (jeux vidéo)
     if(state.activeCat === "gaming"){
       sec = section(t("fp_platform"));
@@ -2085,20 +1963,11 @@
     row = chipRow(sec);
     chip(row, t("sort_new"), state.sort === "new", function(){ setSort("new"); fpRefresh(); });
     chip(row, t("sort_near"), state.sort === "near", function(){ setSort("near"); fpRefresh(); });
-    if(state.sort === "near"){
-      var mc = document.createElement("select");
-      mc.className = "fp-select"; mc.setAttribute("aria-label", t("my_city_label"));
-      var o0 = document.createElement("option"); o0.value = ""; o0.textContent = "📍 " + t("my_city_label"); mc.appendChild(o0);
-      CITIES.forEach(function(cn){ var o = document.createElement("option"); o.value = cn; o.textContent = cn; mc.appendChild(o); });
-      mc.value = state.myCity || "";
-      mc.addEventListener("change", function(){ state.myCity = mc.value; lsSet(MYCITY_KEY, state.myCity); fpRefresh(); });
-      sec.appendChild(mc);
-      if(!state.myCity){
-        var tip = document.createElement("p");
-        tip.className = "cmap-hint";
-        tip.textContent = t("near_need_city");
-        sec.appendChild(tip);
-      }
+    if(state.sort === "near" && !state.myCity){
+      var tip = document.createElement("p");
+      tip.className = "cmap-hint";
+      tip.textContent = t("near_need_city");
+      sec.appendChild(tip);
     }
   }
 
@@ -2288,8 +2157,7 @@
     }
 
     var actions = card.querySelector(".tag-actions");
-    /* owner buttons (marqué échangé / supprimer) never show on the small "similar ads" cards inside the modal */
-    if(!inModal && isMine(l)){
+    if(l.ownerToken && ownerToken && l.ownerToken === ownerToken){
       var swapBtn = document.createElement("button");
       swapBtn.type = "button";
       swapBtn.className = "swap-btn" + (isSwapped ? " active" : "");
@@ -2433,7 +2301,7 @@
   /* ---------- compteur de vues (1 par annonce et par session) ---------- */
   function bumpViews(l){
     if(!db || !state.dbReady || !l || !l.id) return;
-    if(isMine(l)) return;
+    if(l.ownerToken && ownerToken && l.ownerToken === ownerToken) return;
     var seen = {};
     try{ seen = JSON.parse(sessionStorage.getItem("ijanbadlou_viewed") || "{}"); }catch(e){}
     if(seen[l.id]) return;
@@ -2467,11 +2335,11 @@
       sec = document.createElement("section");
       sec.id = "m-sim"; sec.className = "similar";
       sec.innerHTML = '<h3></h3><div class="row sim-row"></div>';
-      info.insertBefore(sec, disc.nextSibling);   /* messages first, similar ads underneath */
+      info.insertBefore(sec, disc);
     }
     var scored = [];
     state.listings.forEach(function(x){
-      if(x.id === l.id || x.status === "swapped" || reported[x.id]) return;
+      if(x.id === l.id || x.status === "swapped") return;
       var sc = (x.category === l.category ? 2 : 0) + (x.city === l.city ? 1 : 0);
       if(sc > 0){ scored.push({l: x, sc: sc}); }
     });
@@ -2607,11 +2475,7 @@
       (l.platform ? " · " + platLabel(l.platform) : "") + (l.gtype ? " · " + gtypeLabel(l.gtype) : "");
     document.getElementById("m-title").textContent = l.title || "";
     document.getElementById("m-desc").textContent = l.desc || "";
-    var wantTxt = l.want || "";
-    if(l.wantCat && l.wantCat !== "any" && catById[l.wantCat]){
-      wantTxt += "  ·  " + (state.lang === "ar" ? catById[l.wantCat].ar : catById[l.wantCat].fr);
-    }
-    document.getElementById("m-want").textContent = wantTxt;
+    document.getElementById("m-want").textContent = l.want || "";
     document.getElementById("m-city").textContent = l.city || "";
     document.getElementById("m-owner").textContent = l.owner || "";
 
@@ -2636,7 +2500,7 @@
     actions.appendChild(favB);
 
     var isSwapped = (l.status === "swapped");
-    if(isMine(l)){
+    if(l.ownerToken && ownerToken && l.ownerToken === ownerToken){
       // swap toggle
       var swapM = document.createElement("button");
       swapM.type = "button";
@@ -2688,97 +2552,9 @@
     buildShareButtons(l);
     renderViews(l);
     renderSimilar(l);
-    renderReport(l);
-  }
-
-  /* ---------- signaler une annonce ---------- */
-  var FLAG_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></svg>';
-  var REPORT_REASONS = [["spam","rep_spam"],["fake","rep_fake"],["forbidden","rep_forbidden"],["scam","rep_scam"],["other","rep_other"]];
-
-  function renderReport(l){
-    var info = modalEl.querySelector(".modal-info");
-    var box = document.getElementById("m-report");
-    if(!box){
-      box = document.createElement("div");
-      box.id = "m-report"; box.className = "rep-wrap";
-      info.appendChild(box);
-    }
-    box.innerHTML = "";
-    if(isMine(l)){ box.hidden = true; return; }
-    box.hidden = false;
-
-    var link = document.createElement("button");
-    link.type = "button"; link.className = "rep-link";
-    link.innerHTML = FLAG_SVG + "<span></span>";
-    link.querySelector("span").textContent = t("rep_btn");
-    box.appendChild(link);
-
-    var panel = document.createElement("div");
-    panel.className = "rep-panel"; panel.hidden = true;
-    var title = document.createElement("b");
-    title.textContent = t("rep_title");
-    panel.appendChild(title);
-    var chosen = "";
-    var reasons = document.createElement("div");
-    reasons.className = "fp-chips";
-    REPORT_REASONS.forEach(function(r){
-      var c = document.createElement("button");
-      c.type = "button"; c.className = "fp-chip"; c.setAttribute("aria-pressed", "false");
-      c.textContent = t(r[1]);
-      c.addEventListener("click", function(){
-        chosen = r[0];
-        Array.prototype.forEach.call(reasons.children, function(x){ x.setAttribute("aria-pressed", String(x === c)); });
-        send.disabled = false;
-      });
-      reasons.appendChild(c);
-    });
-    panel.appendChild(reasons);
-    var btns = document.createElement("div");
-    btns.className = "rep-btns";
-    var send = document.createElement("button");
-    send.type = "button"; send.className = "btn primary"; send.disabled = true;
-    send.textContent = t("rep_send");
-    send.addEventListener("click", function(){ if(chosen){ send.disabled = true; sendReport(l, chosen); } });
-    var cancel = document.createElement("button");
-    cancel.type = "button"; cancel.className = "btn ghost";
-    cancel.textContent = t("rep_cancel");
-    cancel.addEventListener("click", function(){ panel.hidden = true; link.hidden = false; });
-    btns.appendChild(send); btns.appendChild(cancel);
-    panel.appendChild(btns);
-    box.appendChild(panel);
-
-    link.addEventListener("click", function(){
-      panel.hidden = false; link.hidden = true;
-      try{ panel.scrollIntoView({block: "nearest", behavior: "smooth"}); }catch(e){}
-    });
-  }
-
-  function sendReport(l, reason){
-    function done(){
-      reported[l.id] = 1;
-      lsSet(REPORTED_KEY, JSON.stringify(reported));
-      showToast(t("rep_done"));
-      closeModal();
-      buildChips();
-      renderGrid();
-    }
-    if(!state.dbReady || !db){ done(); return; }      // offline demo mode: hide locally only
-    if(!myUid){ showToast(t("auth_wait")); renderReport(l); return; }
-    db.collection("reports").doc(l.id + "_" + myUid).set({
-      listingId: l.id,
-      listingTitle: (l.title || "").slice(0, 80),
-      reporterUid: myUid,
-      reason: reason,
-      createdAt: Date.now()
-    }).then(done).catch(function(err){
-      // permission-denied on an existing report doc = this browser already reported it
-      if(err && err.code === "permission-denied"){ done(); }
-      else { showToast(t("rep_error")); renderReport(l); }
-    });
   }
 
   var sendLastTime = 0; // anti-spam: last message send timestamp
-  var notifBtnHide = function(){};
 
   /* ---------- private chat (one thread per visitor <-> listing owner) ---------- */
   var NAME_KEY = "ijanbadlou_name";
@@ -2790,8 +2566,6 @@
   var threadName = "";
 
   function isOwnerOf(l){ return !!(l.ownerUid && myUid && l.ownerUid === myUid); }
-  // "mine" = created by this browser (uid) — or by this browser's old local token (legacy listings)
-  function isMine(l){ return isOwnerOf(l) || !!(l.ownerToken && ownerToken && l.ownerToken === ownerToken); }
   function chatsRef(l){ return db.collection("listings").doc(l.id).collection("chats"); }
 
   function stopComments(){
@@ -3418,13 +3192,6 @@
     var errorEl = document.getElementById("form-error");
     errorEl.hidden = true;
 
-    // rules require a signed-in (anonymous) user
-    if(state.dbReady && !myUid){
-      errorEl.textContent = t("auth_wait");
-      errorEl.hidden = false;
-      return;
-    }
-
     // anti-spam: max 1 listing per 60s
     var now2 = Date.now();
     var POST_COOLDOWN = 60000;
@@ -3443,7 +3210,6 @@
       title: document.getElementById("f-title").value.trim(),
       desc: document.getElementById("f-desc").value.trim(),
       want: document.getElementById("f-want").value.trim(),
-      wantCat: (document.getElementById("f-wantcat") || {}).value || "any",
       owner: document.getElementById("f-name").value.trim(),
       phone: document.getElementById("f-phone").value.trim(),
       ownerToken: ownerToken,
@@ -3474,15 +3240,6 @@
       formSection.hidden = true;
       showToast(t("toast_posted"));
       document.getElementById("listings").scrollIntoView({behavior:"smooth", block:"start"});
-      // the poster will want to know when someone writes: ask for notification permission now (we're in a click/submit gesture)
-      try{
-        if(canPush && "Notification" in window && Notification.permission === "default"){
-          Notification.requestPermission().then(function(p){
-            notifBtnHide();
-            if(p === "granted"){ showToast(t("notif_on")); }
-          });
-        }
-      }catch(err){}
     }).catch(function(err){
       var msg = t("write_error");
       if(err && err.code === "permission-denied") msg = t("write_denied");
@@ -3567,7 +3324,6 @@
 
   // ---- notifications (quand le site est ouvert en arrière-plan) ----
   var notifBtn = document.getElementById("btn-notif");
-  notifBtnHide = function(){ notifBtn.hidden = true; };
   if("Notification" in window && Notification.permission === "default" && canPush){ notifBtn.hidden = false; }
   notifBtn.addEventListener("click", function(){
     Notification.requestPermission().then(function(p){
