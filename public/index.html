@@ -2944,6 +2944,10 @@
     });
     box.appendChild(who); box.appendChild(out);
     body.appendChild(box);
+    var dbg = document.createElement("p");
+    dbg.style.cssText = "margin:8px 0 0;font-size:.72rem;color:var(--ink-soft);word-break:break-all;user-select:all";
+    dbg.textContent = "UID : " + authUser.uid + " · " + (adminInfo || "admin : ?");
+    body.appendChild(dbg);
   }
   function renderInbox(){
     var body = document.getElementById("inbox-body");
@@ -3008,6 +3012,7 @@
   }
   // ---- modération : annonces en attente ----
   var adminFlag = false;
+  var adminInfo = "";   // diagnostic affiché dans la boîte Messages
   var wantAdmin = /^\/admin\/?$/.test(window.location.pathname);
   var adminFocus = (window.location.hash || "").replace(/^#/, "");
   function isVisibleListing(l){
@@ -3027,7 +3032,8 @@
     if(!db || !authUser || authUser.isAnonymous){ adminFlag = false; applyVisibility(); return Promise.resolve(false); }
     return db.collection("admins").doc(authUser.uid).get().then(function(snap){
       adminFlag = !!(snap && snap.exists);
-    }).catch(function(){ adminFlag = false; }).then(function(){
+      adminInfo = adminFlag ? "admin : oui" : "admin : non (aucun document admins/" + authUser.uid + ")";
+    }).catch(function(err){ adminFlag = false; adminInfo = "admin : erreur " + ((err && err.code) || "?"); }).then(function(){
       applyVisibility();
       routeAdmin();
       return adminFlag;
