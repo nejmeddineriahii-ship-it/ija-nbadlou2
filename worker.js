@@ -11,7 +11,7 @@
  * des annonces — ce qui est déjà le cas puisque le site les affiche à tout le monde.
  */
 
-const PROJECT_ID = "ija-nbadlou2";
+const PROJECT_ID = "ija-nbadlo";
 const API_KEY = "AIzaSyAOvAmGVrTgo5qhILdysEVyzYi2TmjDIeE";
 const SITE = "https://ija-nbadlou.tn";
 const FS_BASE = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
