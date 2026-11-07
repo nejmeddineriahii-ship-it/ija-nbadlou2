@@ -2380,7 +2380,7 @@
       sec = document.createElement("section");
       sec.id = "m-sim"; sec.className = "similar";
       sec.innerHTML = '<h3></h3><div class="row sim-row"></div>';
-      info.insertBefore(sec, disc);
+      info.appendChild(sec);   // les annonces similaires restent tout en bas, après les messages privés
     }
     var scored = [];
     state.listings.forEach(function(x){
