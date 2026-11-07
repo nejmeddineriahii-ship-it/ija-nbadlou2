@@ -87,7 +87,7 @@ export function sitemapXml(docs) {
     `<url><loc>${SITE}/a-propos</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>`,
   ];
   for (const d of docs) {
-    if (!d.id || d.status === "swapped") continue;
+    if (!d.id || d.status === "swapped" || d.status === "pending" || d.status === "rejected") continue;
     const last = iso(d.createdAt);
     urls.push(
       `<url><loc>${SITE}/annonce/${esc(encodeURIComponent(d.id))}</loc>` +
@@ -134,6 +134,94 @@ async function listAll(fetchImpl = fetch) {
     });
 }
 
+
+/* ------------------------------------------------------------------ nouvelle annonce -> Telegram */
+
+const b64urlToBytes = (s) => {
+  s = s.replace(/-/g, "+").replace(/_/g, "/");
+  while (s.length % 4) s += "=";
+  const bin = atob(s);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+};
+
+// Vérifie un jeton Firebase (RS256) et renvoie son contenu, ou null s'il est invalide
+export async function verifyFirebaseToken(token, fetchImpl = fetch, now = Date.now()) {
+  try {
+    const parts = String(token || "").split(".");
+    if (parts.length !== 3) return null;
+    const header = JSON.parse(new TextDecoder().decode(b64urlToBytes(parts[0])));
+    const payload = JSON.parse(new TextDecoder().decode(b64urlToBytes(parts[1])));
+    if (header.alg !== "RS256" || !header.kid) return null;
+    const sec = Math.floor(now / 1000);
+    if (payload.aud !== PROJECT_ID) return null;
+    if (payload.iss !== "https://securetoken.google.com/" + PROJECT_ID) return null;
+    if (!payload.sub || typeof payload.exp !== "number" || payload.exp < sec) return null;
+    if (typeof payload.iat === "number" && payload.iat > sec + 300) return null;
+    const res = await fetchImpl("https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com", {
+      cf: { cacheTtl: 3600, cacheEverything: true },
+    });
+    if (!res.ok) return null;
+    const jwk = (await res.json()).keys.find((k) => k.kid === header.kid);
+    if (!jwk) return null;
+    const key = await crypto.subtle.importKey("jwk", jwk, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["verify"]);
+    const okSig = await crypto.subtle.verify(
+      "RSASSA-PKCS1-v1_5", key, b64urlToBytes(parts[2]), new TextEncoder().encode(parts[0] + "." + parts[1])
+    );
+    return okSig ? payload : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+export function telegramText(id, l) {
+  const lines = [
+    "🆕 Annonce à valider",
+    "",
+    `📦 ${trunc(l.title, 60)}`,
+    `📍 ${l.city || "?"} · ${l.category || "?"}`,
+    `👤 ${trunc(l.owner, 30)} · 📞 ${trunc(l.phone, 20)}`,
+  ];
+  if (l.desc) lines.push(`📝 ${trunc(l.desc, 160)}`);
+  if (l.want) lines.push(`⇄ ${trunc(l.want, 80)}`);
+  lines.push("", `${SITE}/admin#${id}`);
+  return lines.join("\n");
+}
+
+async function newListingRoute(request, env) {
+  const json = (obj, status = 200) =>
+    new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
+  const auth = request.headers.get("authorization") || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  const payload = await verifyFirebaseToken(token);
+  if (!payload) return json({ ok: false, error: "auth" }, 401);
+  let body;
+  try { body = await request.json(); } catch (e) { return json({ ok: false, error: "body" }, 400); }
+  const id = String((body && body.id) || "");
+  if (!/^[A-Za-z0-9_-]{6,40}$/.test(id)) return json({ ok: false, error: "id" }, 400);
+
+  // on lit l'annonce AVEC le jeton de l'utilisateur : les règles Firestore garantissent qu'elle existe
+  const res = await fetch(`${FS_BASE}/listings/${encodeURIComponent(id)}`, { headers: { authorization: "Bearer " + token } });
+  if (!res.ok) return json({ ok: false, error: "listing" }, 404);
+  const l = fromFields((await res.json()).fields || {});
+  if (l.ownerUid !== payload.sub || l.status !== "pending") return json({ ok: false, error: "state" }, 403);
+
+  // une seule notification par annonce
+  const cache = caches.default;
+  const marker = new Request(`${SITE}/__notified/${id}`);
+  if (await cache.match(marker)) return json({ ok: true, duplicate: true });
+  await cache.put(marker, new Response("1", { headers: { "cache-control": "public, max-age=86400" } }));
+
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return json({ ok: false, error: "telegram-not-configured" }, 200);
+  const tg = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: telegramText(id, l), disable_web_page_preview: true }),
+  });
+  return json({ ok: tg.ok });
+}
+
 /* ------------------------------------------------------------------ routes */
 
 async function serveIndex(request, env) {
@@ -150,6 +238,9 @@ async function listingPage(request, env, id) {
   }
   if (result.missing) {
     return new Response(indexRes.body, { status: 404, headers: indexRes.headers });
+  }
+  if (result.listing && (result.listing.status === "pending" || result.listing.status === "rejected")) {
+    return indexRes; // annonce pas encore validée : pas d'aperçu public
   }
   const m = buildMeta(id, result.listing);
   // setAttribute échappe déjà les guillemets ; on neutralise aussi < et > par prudence
@@ -217,6 +308,7 @@ export default {
     const url = new URL(request.url);
     const p = url.pathname;
     try {
+      if (request.method === "POST" && p === "/api/new-listing") return await newListingRoute(request, env);
       if (request.method === "GET" || request.method === "HEAD") {
         if (p === "/__ija") {
           // diagnostic : /__ija?id=<id de l'annonce>
