@@ -218,6 +218,16 @@ export default {
     const p = url.pathname;
     try {
       if (request.method === "GET" || request.method === "HEAD") {
+        if (p === "/__ija") {
+          // diagnostic : /__ija?id=<id de l'annonce>
+          const id = url.searchParams.get("id") || "";
+          let out = "worker: ok\nproject: " + PROJECT_ID + "\n";
+          try {
+            const r = await getListing(id);
+            out += r.missing ? "annonce: introuvable (404)\n" : "annonce: ok, titre = " + (r.listing.title || "?") + "\n";
+          } catch (e) { out += "firestore: ERREUR " + e.message + "\n"; }
+          return new Response(out, { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" } });
+        }
         if (p === "/sitemap.xml") return await sitemapRoute();
         let m = p.match(/^\/img\/([^/]+)\/(\d+)(?:\.\w+)?$/);
         if (m) return await imageRoute(decodeURIComponent(m[1]), Number(m[2]));
