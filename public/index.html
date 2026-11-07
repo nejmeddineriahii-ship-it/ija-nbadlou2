@@ -857,6 +857,10 @@
   .ib-account{ margin-top:18px; padding-top:14px; border-top:1px solid var(--line); font-size:.86rem; color:var(--ink-soft); display:flex; gap:10px; align-items:center; justify-content:space-between; }
   .ib-account button{ font:inherit; font-size:.84rem; cursor:pointer; background:transparent; color:var(--accent); border:1.5px solid var(--line); border-radius:999px; padding:6px 13px; }
   /* ===== modération ===== */
+  #admin-btn{ width:auto; padding:0 14px 0 12px; gap:7px; background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:700; font-size:.88rem; }
+  #admin-btn[hidden]{ display:none; }
+  #admin-btn .adm-label{ display:none; }
+  @media (min-width: 700px){ #admin-btn .adm-label{ display:inline; } }
   .pend-pill{
     position:absolute; top:10px; inset-inline-start:10px; z-index:4; padding:4px 10px; border-radius:999px;
     background:#e0a526; color:#1a1204; font-size:.7rem; font-weight:800; letter-spacing:.03em;
@@ -1029,6 +1033,7 @@
     <div class="bar-actions">
       <button class="theme-toggle inbox-btn" id="admin-btn" type="button" data-i18n-aria="adm_title" aria-label="Modération" hidden>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg>
+        <span class="adm-label" data-i18n="adm_title"></span>
         <span class="unread-badge inbox-dot" id="admin-dot" hidden></span>
       </button>
       <button class="theme-toggle inbox-btn" id="inbox-btn" type="button" data-i18n-aria="inbox_title" aria-label="Messages">
@@ -2291,7 +2296,24 @@
     }
 
     var actions = card.querySelector(".tag-actions");
+    var isPendingL = (l.status === "pending");
+    var isRejectedL = (l.status === "rejected");
+    if(adminFlag && isPendingL && !inModal){
+      var accB = document.createElement("button");
+      accB.type = "button"; accB.className = "swap-btn active";
+      accB.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg><span></span>';
+      accB.querySelector("span").textContent = t("adm_accept");
+      accB.addEventListener("click", function(e){ e.stopPropagation(); accB.disabled = true; setStatus(l, "available"); });
+      actions.appendChild(accB);
+      var rejB = document.createElement("button");
+      rejB.type = "button"; rejB.className = "del-btn";
+      rejB.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-trash"/></svg><span></span>';
+      rejB.querySelector("span").textContent = t("adm_reject");
+      rejB.addEventListener("click", function(e){ e.stopPropagation(); rejB.disabled = true; setStatus(l, "rejected"); });
+      actions.appendChild(rejB);
+    }
     if(l.ownerToken && ownerToken && l.ownerToken === ownerToken){
+      if(!isPendingL && !isRejectedL){
       var swapBtn = document.createElement("button");
       swapBtn.type = "button";
       swapBtn.className = "swap-btn" + (isSwapped ? " active" : "");
@@ -2299,6 +2321,7 @@
       swapBtn.querySelector("span").textContent = isSwapped ? t("swap_btn_unmark") : t("swap_btn_mark");
       swapBtn.addEventListener("click", function(e){ e.stopPropagation(); toggleSwapped(l); });
       actions.appendChild(swapBtn);
+      }
       var delBtn = document.createElement("button");
       delBtn.type = "button";
       delBtn.className = "del-btn";
@@ -2306,7 +2329,8 @@
       delBtn.querySelector("span").textContent = t("delete_btn");
       delBtn.addEventListener("click", function(e){ e.stopPropagation(); deleteListing(l); });
       actions.appendChild(delBtn);
-    } else {
+    }
+    if(!actions.children.length){
       actions.parentNode.removeChild(actions);
     }
 
@@ -2638,6 +2662,7 @@
       // swap toggle
       var swapM = document.createElement("button");
       swapM.type = "button";
+      swapM.hidden = (l.status === "pending" || l.status === "rejected");
       swapM.className = "swap-btn" + (isSwapped ? " active" : "");
       swapM.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg><span></span>';
       swapM.querySelector("span").textContent = isSwapped ? t("swap_btn_unmark") : t("swap_btn_mark");
