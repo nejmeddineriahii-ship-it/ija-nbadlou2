@@ -318,6 +318,27 @@ export default {
             const r = await getListing(id);
             out += r.missing ? "annonce: introuvable (404)\n" : "annonce: ok, titre = " + (r.listing.title || "?") + "\n";
           } catch (e) { out += "firestore: ERREUR " + e.message + "\n"; }
+          out += "telegram token: " + (env.TELEGRAM_BOT_TOKEN ? "présent" : "ABSENT") + "\n";
+          out += "telegram chat id: " + (env.TELEGRAM_CHAT_ID ? "présent" : "ABSENT") + "\n";
+          if (url.searchParams.get("tg") && env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
+            // message de test (1 par minute au maximum)
+            const cache = caches.default;
+            const mk = new Request(`${SITE}/__tgtest/${Math.floor(Date.now() / 60000)}`);
+            if (await cache.match(mk)) {
+              out += "test telegram: attends 1 minute avant de réessayer\n";
+            } else {
+              await cache.put(mk, new Response("1", { headers: { "cache-control": "public, max-age=90" } }));
+              try {
+                const tg = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                  method: "POST",
+                  headers: { "content-type": "application/json" },
+                  body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: "✅ Test Ija Nbadlou : les notifications marchent." }),
+                });
+                const j = await tg.json().catch(() => ({}));
+                out += "test telegram: " + (j.ok ? "ENVOYÉ ✅" : "ERREUR " + tg.status + " " + (j.description || "")) + "\n";
+              } catch (e) { out += "test telegram: ERREUR " + e.message + "\n"; }
+            }
+          }
           return new Response(out, { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" } });
         }
         if (p === "/sitemap.xml") return await sitemapRoute();
