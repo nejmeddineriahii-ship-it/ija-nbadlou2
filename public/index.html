@@ -843,6 +843,35 @@
   .ib-on{ font-size:.78rem; color:var(--accent); font-weight:600; margin-top:2px; }
   .ib-last{ margin:4px 0 0; font-size:.86rem; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .ib-empty{ color:var(--ink-soft); text-align:center; padding:28px 8px; }
+  /* ===== connexion Google / Facebook ===== */
+  .login-text{ margin:14px 0 18px; line-height:1.55; color:var(--ink-soft); font-size:.95rem; }
+  .login-btn{
+    display:flex; align-items:center; justify-content:center; gap:12px; width:100%; margin-bottom:12px; cursor:pointer;
+    font:inherit; font-weight:600; font-size:1rem; padding:13px 16px; border-radius:12px; border:1.5px solid var(--line);
+  }
+  .login-btn svg{ width:22px; height:22px; flex:none; }
+  .login-btn.google{ background:#fff; color:#1f1f1f; }
+  .login-btn.facebook{ background:#1877f2; color:#fff; border-color:#1877f2; }
+  .login-btn:disabled{ opacity:.6; cursor:wait; }
+  .login-err{ color:#e5594a; font-size:.88rem; margin:6px 0 0; }
+  .ib-account{ margin-top:18px; padding-top:14px; border-top:1px solid var(--line); font-size:.86rem; color:var(--ink-soft); display:flex; gap:10px; align-items:center; justify-content:space-between; }
+  .ib-account button{ font:inherit; font-size:.84rem; cursor:pointer; background:transparent; color:var(--accent); border:1.5px solid var(--line); border-radius:999px; padding:6px 13px; }
+  /* ===== modération ===== */
+  .pend-pill{
+    position:absolute; top:10px; inset-inline-start:10px; z-index:4; padding:4px 10px; border-radius:999px;
+    background:#e0a526; color:#1a1204; font-size:.7rem; font-weight:800; letter-spacing:.03em;
+  }
+  .pend-pill.rej{ background:#e5594a; color:#fff; }
+  .admin-sheet{ width:min(560px,100%); }
+  .ad-item{ border:1.5px solid var(--line); border-radius:14px; padding:12px; margin-bottom:14px; background:var(--board2); }
+  .ad-item.focus{ border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+  .ad-item img{ width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin-bottom:10px; }
+  .ad-item h3{ margin:0 0 4px; font-size:1.05rem; }
+  .ad-meta{ font-size:.82rem; color:var(--ink-soft); margin:0 0 6px; }
+  .ad-desc{ margin:0 0 6px; font-size:.92rem; }
+  .ad-btns{ display:flex; gap:10px; margin-top:12px; }
+  .ad-btns .btn{ flex:1; justify-content:center; }
+  .ad-btns .reject{ background:transparent; color:#e5594a; border:1.5px solid #e5594a; }
   .plat-tag{
     position:absolute; bottom:10px; inset-inline-start:10px; z-index:2; padding:4px 10px; border-radius:999px;
     font-size:.74rem; font-weight:700; letter-spacing:.02em; color:#fff; background:rgba(14,52,150,.85); backdrop-filter:blur(3px);
@@ -998,6 +1027,10 @@
       <input id="search-input" type="search" data-i18n-ph="search_ph" aria-label="Search">
     </div>
     <div class="bar-actions">
+      <button class="theme-toggle inbox-btn" id="admin-btn" type="button" data-i18n-aria="adm_title" aria-label="Modération" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-check"/></svg>
+        <span class="unread-badge inbox-dot" id="admin-dot" hidden></span>
+      </button>
       <button class="theme-toggle inbox-btn" id="inbox-btn" type="button" data-i18n-aria="inbox_title" aria-label="Messages">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-chat"/></svg>
         <span class="unread-badge inbox-dot" id="inbox-dot" hidden></span>
@@ -1272,6 +1305,43 @@
   </div>
 </div>
 
+<div class="fp" id="admin" hidden role="dialog" aria-modal="true" aria-labelledby="admin-title">
+  <div class="fp-backdrop" data-ad-close></div>
+  <div class="fp-sheet admin-sheet">
+    <header class="fp-head">
+      <h2 id="admin-title" data-i18n="adm_title"></h2>
+      <button type="button" class="fp-x" data-ad-close aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+    <div class="fp-body" id="admin-body"></div>
+  </div>
+</div>
+
+<div class="fp" id="login" hidden role="dialog" aria-modal="true" aria-labelledby="login-title">
+  <div class="fp-backdrop" data-lg-close></div>
+  <div class="fp-sheet login-sheet">
+    <header class="fp-head">
+      <h2 id="login-title" data-i18n="login_title"></h2>
+      <button type="button" class="fp-x" data-lg-close aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+    <div class="fp-body">
+      <p class="login-text" data-i18n="login_text"></p>
+      <button type="button" class="login-btn google" id="login-google">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7l-7.9-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+        <span data-i18n="login_google"></span>
+      </button>
+      <button type="button" class="login-btn facebook" id="login-facebook">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg>
+        <span data-i18n="login_facebook"></span>
+      </button>
+      <p class="login-err" id="login-err" hidden></p>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -1318,6 +1388,16 @@
     loading_text: {ar:"يحمّل الإعلانات…", fr:"Chargement des annonces…"},
     footer_text: {ar:"صنع في تونس 🇹🇳 — Ija Nbadlou، نبدلو بلا فلوس.", fr:"Fait en Tunisie 🇹🇳 — Ija Nbadlou, on échange sans argent."},
     toast_posted: {ar:"تم نشر الإعلان!", fr:"Annonce publiée !"},
+    toast_pending: {ar:"وصلنا إعلانك! باش يظهر للناس مباشرة بعد ما نراجعوه.", fr:"Annonce reçue ! Elle sera visible dès qu'elle est validée."},
+    pend_pill: {ar:"في الانتظار", fr:"En attente"},
+    rej_pill: {ar:"مرفوض", fr:"Refusée"},
+    pend_note: {ar:"إعلانك في الانتظار : نراجعوه وبعد يظهر للناس. إنت وحدك تشوفو توّا.", fr:"Ton annonce est en attente de validation. Pour l'instant, toi seul(e) la vois."},
+    rej_note: {ar:"الإعلان هذا تم رفضو. تنجم تمسحو وتحط واحد آخر.", fr:"Cette annonce a été refusée. Tu peux la supprimer et en publier une autre."},
+    adm_title: {ar:"مراجعة الإعلانات", fr:"Modération"},
+    adm_empty: {ar:"ما فما حتى إعلان في الانتظار.", fr:"Aucune annonce en attente."},
+    adm_accept: {ar:"قبول", fr:"Accepter"},
+    adm_reject: {ar:"رفض", fr:"Refuser"},
+    adm_denied: {ar:"هذا الحساب موش مسؤول.", fr:"Ce compte n'est pas administrateur."},
     cat_all: {ar:"فلاتر", fr:"Filtres"},
     page_title: {ar:"التبادل في تونس", fr:"Troc en Tunisie"},
     filt_today: {ar:"اليوم", fr:"Aujourd'hui"},
@@ -1341,6 +1421,13 @@
     gal_next: {ar:"الصورة الجاية", fr:"Photo suivante"},
     gal_open: {ar:"شوف الإعلان", fr:"Voir l'annonce"},
     d_title: {ar:"رسائل خاصة", fr:"Messages privés"},
+    login_title: {ar:"ادخل باش تحط إعلان", fr:"Connecte-toi pour publier"},
+    login_text: {ar:"باش نحميو الموقع من السبام، لازم تدخل بحساب Google ولا Facebook قبل ما تحط إعلان. الإعلانات والرسائل متاعك تبقى مربوطة بحسابك.", fr:"Pour garder le site propre, connecte-toi avec Google ou Facebook avant de publier. Tes annonces et messages restent liés à ton compte."},
+    login_google: {ar:"الدخول بـ Google", fr:"Continuer avec Google"},
+    login_facebook: {ar:"الدخول بـ Facebook", fr:"Continuer avec Facebook"},
+    login_error: {ar:"ما نجمناش ندخلوك. جرب مرة أخرى (إذا فتحت الموقع من داخل فيسبوك، افتحو في Chrome).", fr:"Connexion impossible. Réessaie (si tu ouvres le site depuis Facebook, ouvre-le dans Chrome/Safari)."},
+    login_as: {ar:"داخل بحساب", fr:"Connecté :"},
+    logout: {ar:"خروج", fr:"Se déconnecter"},
     inbox_title: {ar:"الرسائل", fr:"Messages"},
     inbox_recv: {ar:"رسائل جاتك", fr:"Reçus sur mes annonces"},
     inbox_sent: {ar:"مراسلاتي", fr:"Mes discussions"},
@@ -2169,6 +2256,8 @@
     var unreadCount = (isOwnerOf(l) && state.unreadMap[l.id] > 0) ? state.unreadMap[l.id] : 0;
     var badgeHtml = unreadCount ? '<div class="card-badge-wrap"><span class="unread-badge">'+unreadCount+'</span></div>' : '';
     var ribbonHtml = isSwapped ? '<div class="swapped-ribbon">'+t("swap_ribbon")+'</div>' : '';
+    if(l.status === "pending"){ ribbonHtml = '<div class="pend-pill">'+t("pend_pill")+'</div>'; }
+    else if(l.status === "rejected"){ ribbonHtml = '<div class="pend-pill rej">'+t("rej_pill")+'</div>'; }
 
     card.innerHTML =
       ribbonHtml + badgeHtml +
@@ -2572,8 +2661,9 @@
       closedNote.style.marginTop = "6px";
       actions.parentNode.insertBefore(closedNote, actions.nextSibling);
     }
-    closedNote.textContent = isSwapped ? t("swap_closed_note") : "";
-    closedNote.hidden = !isSwapped;
+    var pendNote = (l.status === "pending") ? t("pend_note") : (l.status === "rejected" ? t("rej_note") : "");
+    closedNote.textContent = pendNote || (isSwapped ? t("swap_closed_note") : "");
+    closedNote.hidden = !(pendNote || isSwapped);
 
     // share section
     var shareWrap = document.getElementById("m-share-wrap");
@@ -2816,9 +2906,28 @@
     dot.hidden = !(n > 0);
     dot.textContent = n > 9 ? "9+" : String(n);
   }
+  function renderAccount(body){
+    if(!authUser || authUser.isAnonymous) return;
+    var box = document.createElement("div");
+    box.className = "ib-account";
+    var who = document.createElement("span");
+    who.textContent = t("login_as") + " " + (authUser.displayName || authUser.email || "");
+    var out = document.createElement("button");
+    out.type = "button"; out.textContent = t("logout");
+    out.addEventListener("click", function(){
+      firebase.auth().signOut().then(function(){ closeInbox(); });
+    });
+    box.appendChild(who); box.appendChild(out);
+    body.appendChild(box);
+  }
   function renderInbox(){
     var body = document.getElementById("inbox-body");
     if(!body) return;
+    renderInbox._inner();
+    renderAccount(body);
+  }
+  renderInbox._inner = function(){
+    var body = document.getElementById("inbox-body");
     body.innerHTML = "";
     var rows = [];
     state.listings.forEach(function(l){
@@ -2872,6 +2981,171 @@
       });
     }
   }
+  // ---- modération : annonces en attente ----
+  var adminFlag = false;
+  var wantAdmin = /^\/admin\/?$/.test(window.location.pathname);
+  var adminFocus = (window.location.hash || "").replace(/^#/, "");
+  function isVisibleListing(l){
+    if(l.status === "rejected") return isOwnerOf(l);      // refusée : seul l'auteur la voit
+    if(l.status === "pending") return isOwnerOf(l) || adminFlag;
+    return true;
+  }
+  function applyVisibility(){
+    state.listings = (state.allListings || []).filter(isVisibleListing);
+    watchOwnerBadges();
+    renderGrid();
+    if(openId) renderModal();
+    updateAdminBadge();
+    if(!document.getElementById("admin").hidden){ renderAdmin(); }
+  }
+  function checkAdmin(){
+    if(!db || !authUser || authUser.isAnonymous){ adminFlag = false; applyVisibility(); return Promise.resolve(false); }
+    return db.collection("admins").doc(authUser.uid).get().then(function(snap){
+      adminFlag = !!(snap && snap.exists);
+    }).catch(function(){ adminFlag = false; }).then(function(){
+      applyVisibility();
+      routeAdmin();
+      return adminFlag;
+    });
+  }
+  function pendingList(){
+    return (state.allListings || []).filter(function(l){ return l.status === "pending"; })
+      .sort(function(a, b){ return (a.createdAt || 0) - (b.createdAt || 0); });
+  }
+  function updateAdminBtn(){
+    var b = document.getElementById("admin-btn");
+    if(b) b.hidden = !adminFlag;
+  }
+  function updateAdminBadge(){
+    updateAdminBtn();
+    var dot = document.getElementById("admin-dot");
+    if(!dot) return;
+    var n = adminFlag ? pendingList().length : 0;
+    dot.hidden = !(n > 0);
+    dot.textContent = n > 9 ? "9+" : String(n);
+  }
+  function setStatus(l, status){
+    return db.collection("listings").doc(l.id).update({ status: status }).catch(function(err){
+      showToast(err && err.code === "permission-denied" ? t("write_denied") : t("write_error"));
+    });
+  }
+  function renderAdmin(){
+    var body = document.getElementById("admin-body");
+    body.innerHTML = "";
+    var list = pendingList();
+    if(!list.length){
+      var e = document.createElement("p"); e.className = "ib-empty"; e.textContent = t("adm_empty"); body.appendChild(e); return;
+    }
+    list.forEach(function(l){
+      var box = document.createElement("div");
+      box.className = "ad-item" + (adminFocus && adminFocus === l.id ? " focus" : "");
+      box.id = "ad-" + l.id;
+      var imgs = getImgs(l);
+      if(imgs.length){ var im = document.createElement("img"); im.alt = ""; im.src = imgs[0]; box.appendChild(im); }
+      var h = document.createElement("h3"); h.textContent = l.title || ""; box.appendChild(h);
+      var meta = document.createElement("p"); meta.className = "ad-meta";
+      meta.textContent = [((catById[l.category] || catById.other)[state.lang === "ar" ? "ar" : "fr"]), l.city, l.owner, l.phone].filter(Boolean).join(" · ");
+      box.appendChild(meta);
+      if(l.desc){ var d = document.createElement("p"); d.className = "ad-desc"; d.textContent = l.desc; box.appendChild(d); }
+      if(l.want){ var w = document.createElement("p"); w.className = "ad-desc"; w.textContent = "⇄ " + l.want; box.appendChild(w); }
+      var row = document.createElement("div"); row.className = "ad-btns";
+      var ok = document.createElement("button"); ok.type = "button"; ok.className = "btn primary"; ok.textContent = t("adm_accept");
+      ok.addEventListener("click", function(){ ok.disabled = true; setStatus(l, "available"); });
+      var no = document.createElement("button"); no.type = "button"; no.className = "btn reject"; no.textContent = t("adm_reject");
+      no.addEventListener("click", function(){ no.disabled = true; setStatus(l, "rejected"); });
+      row.appendChild(ok); row.appendChild(no); box.appendChild(row);
+      body.appendChild(box);
+    });
+    var f = adminFocus && document.getElementById("ad-" + adminFocus);
+    if(f && f.scrollIntoView){ f.scrollIntoView({block: "center"}); }
+  }
+  function openAdmin(){
+    renderAdmin();
+    document.getElementById("admin").hidden = false;
+  }
+  function closeAdmin(){
+    document.getElementById("admin").hidden = true;
+    if(/^\/admin/.test(window.location.pathname) && canPush){ try{ history.replaceState({}, "", "/"); }catch(e){} }
+  }
+  function routeAdmin(){
+    if(!wantAdmin) return;
+    if(!authUser || authUser.isAnonymous){ openLogin(); loginAfter = function(){ return checkAdmin().then(function(a){ if(a){ wantAdmin = false; openAdmin(); } else { showToast(t("adm_denied")); } }); }; return; }
+    wantAdmin = false;
+    if(adminFlag){ openAdmin(); } else { showToast(t("adm_denied")); }
+  }
+  document.getElementById("admin-btn").addEventListener("click", openAdmin);
+  document.getElementById("admin").addEventListener("click", function(e){
+    if(e.target.closest && e.target.closest("[data-ad-close]")) closeAdmin();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && !document.getElementById("admin").hidden) closeAdmin();
+  });
+  // prévient l'administrateur (Telegram) quand une annonce arrive
+  function notifyNewListing(id){
+    try{
+      if(!authUser || !authUser.getIdToken) return;
+      authUser.getIdToken().then(function(tok){
+        return fetch("/api/new-listing", {
+          method: "POST",
+          headers: {"content-type": "application/json", "authorization": "Bearer " + tok},
+          body: JSON.stringify({id: id})
+        });
+      }).catch(function(){});
+    }catch(e){}
+  }
+
+  // ---- connexion Google / Facebook (obligatoire pour publier une annonce) ----
+  var authUser = null;
+  var loginAfter = null;
+  function loginRequired(){
+    // seulement quand la base partagée + Firebase Auth fonctionnent ; en mode local (hors ligne) on ne bloque pas
+    return !!(state.dbReady && db && window.firebase && firebase.auth && (!authUser || authUser.isAnonymous));
+  }
+  function openLogin(){
+    loginAfter = null;
+    document.getElementById("login-err").hidden = true;
+    document.getElementById("login").hidden = false;
+  }
+  function closeLogin(){ document.getElementById("login").hidden = true; }
+  function doLogin(kind){
+    var errEl = document.getElementById("login-err");
+    errEl.hidden = true;
+    var provider = kind === "facebook" ? new firebase.auth.FacebookAuthProvider() : new firebase.auth.GoogleAuthProvider();
+    var cur = firebase.auth().currentUser;
+    var btns = document.querySelectorAll(".login-btn");
+    btns.forEach(function(b){ b.disabled = true; });
+    // on rattache le compte à l'utilisateur anonyme : il garde ses annonces et ses messages
+    var p = (cur && cur.isAnonymous) ? cur.linkWithPopup(provider) : firebase.auth().signInWithPopup(provider);
+    p.catch(function(err){
+      if(err && err.code === "auth/credential-already-in-use"){
+        // ce compte existe déjà : on s'y connecte directement
+        var cred = err.credential;
+        return cred ? firebase.auth().signInWithCredential(cred) : firebase.auth().signInWithPopup(provider);
+      }
+      throw err;
+    }).then(function(){
+      closeLogin();
+      authUser = firebase.auth().currentUser;
+      myUid = authUser ? authUser.uid : myUid;
+      var after = loginAfter; loginAfter = null;
+      if(after){ after(); } else { openForm(); }
+    }).catch(function(err){
+      if(err && (err.code === "auth/popup-closed-by-user" || err.code === "auth/cancelled-popup-request")) return;
+      errEl.textContent = t("login_error");
+      errEl.hidden = false;
+    }).then(function(){
+      btns.forEach(function(b){ b.disabled = false; });
+    });
+  }
+  document.getElementById("login-google").addEventListener("click", function(){ doLogin("google"); });
+  document.getElementById("login-facebook").addEventListener("click", function(){ doLogin("facebook"); });
+  document.getElementById("login").addEventListener("click", function(e){
+    if(e.target.closest && e.target.closest("[data-lg-close]")) closeLogin();
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && !document.getElementById("login").hidden) closeLogin();
+  });
+
   function openInbox(){
     renderInbox();
     document.getElementById("inbox").hidden = false;
@@ -3046,15 +3320,13 @@
     state.dbReady = true;
     db.collection("listings").orderBy("createdAt", "desc").limit(200).onSnapshot(
       function(snap){
-        state.listings = snap.docs.map(function(d){
+        state.allListings = snap.docs.map(function(d){
           var data = d.data() || {};
           data.id = d.id;
           return data;
         });
         state.loading = false;
-        watchOwnerBadges();
-        renderGrid();
-        if(openId) renderModal();
+        applyVisibility();
       },
       function(err){
         // shared store stopped responding mid-session: fall back locally
@@ -3234,11 +3506,16 @@
       if(firebase.auth){
         firebase.auth().onAuthStateChanged(function(u){
           myUid = u ? u.uid : null;
+          authUser = u || null;
+          adminFlag = false;
+          if(u && !u.isAnonymous){ checkAdmin(); } else { applyVisibility(); }
+          if(!u){ firebase.auth().signInAnonymously().catch(function(){ /* chat stays unavailable */ }); }
+          else if(!u.isAnonymous){ var fn = document.getElementById("f-name"); if(fn && !fn.value && u.displayName){ fn.value = u.displayName.slice(0, 30); } }
           watchOwnerBadges();
           renderGrid();
           if(openId){ var cur = findListing(openId); if(cur){ startComments(cur); renderModal(); } }
+          if(!u || !u.isAnonymous){ /* admin route handled once the admin check ends */ } else { routeAdmin(); }
         });
-        firebase.auth().signInAnonymously().catch(function(){ /* chat stays unavailable */ });
       }
     }catch(e){
       startLocalFallback();
@@ -3251,6 +3528,7 @@
 
   var formSection = document.getElementById("post-form-section");
   function openForm(){
+    if(loginRequired()){ openLogin(); return; }
     formSection.hidden = false;
     formSection.scrollIntoView({behavior: "smooth", block: "start"});
     document.getElementById("f-title").focus();
@@ -3317,6 +3595,7 @@
     var submitBtn = document.getElementById("submit-btn");
     var errorEl = document.getElementById("form-error");
     errorEl.hidden = true;
+    if(loginRequired()){ openLogin(); return; }
 
     // anti-spam: max 1 listing per 60s
     var now2 = Date.now();
@@ -3343,7 +3622,7 @@
       imgs: pendingImgs.slice(),
       img: pendingImgs.length ? pendingImgs[0] : null,   // kept for older listings / compatibility
       createdAt: Date.now(),
-      status: "available"
+      status: state.dbReady ? "pending" : "available"   // avec la base partagée : l'annonce attend la validation
     };
     if(listing.category === "gaming"){
       listing.platform = document.getElementById("f-platform").value;
@@ -3356,7 +3635,8 @@
 
     var task = state.dbReady ? addListingShared(listing) : addListingLocal(listing);
 
-    task.then(function(){
+    task.then(function(ref){
+      if(state.dbReady && ref && ref.id){ notifyNewListing(ref.id); }
       lastPostTime = Date.now();
       form.reset();
       pendingImgs = [];
@@ -3364,7 +3644,7 @@
       buildCatSelect();
       updateGamingFields();
       formSection.hidden = true;
-      showToast(t("toast_posted"));
+      showToast(t(state.dbReady ? "toast_pending" : "toast_posted"));
       document.getElementById("listings").scrollIntoView({behavior:"smooth", block:"start"});
     }).catch(function(err){
       var msg = t("write_error");
