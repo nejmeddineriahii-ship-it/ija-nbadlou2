@@ -232,9 +232,23 @@ export default {
         let m = p.match(/^\/img\/([^/]+)\/(\d+)(?:\.\w+)?$/);
         if (m) return await imageRoute(decodeURIComponent(m[1]), Number(m[2]));
         m = p.match(/^\/annonce\/([^/]+)\/?$/);
-        if (m) return await listingPage(request, env, decodeURIComponent(m[1]));
+        if (m) {
+          if (url.searchParams.get("debug")) {
+            const r = await serveIndex(request, env);
+            const txt = await r.clone().text();
+            return new Response(
+              "index status: " + r.status + "\ncontent-type: " + r.headers.get("content-type") +
+                "\nlength: " + txt.length + "\nhas og:image tag: " + /og:image/.test(txt) + "\n",
+              { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" } }
+            );
+          }
+          return await listingPage(request, env, decodeURIComponent(m[1]));
+        }
       }
     } catch (e) {
+      if (url.searchParams.get("debug")) {
+        return new Response("ERREUR: " + (e && e.stack || e), { headers: { "content-type": "text/plain; charset=utf-8" } });
+      }
       // en cas de souci on retombe sur les fichiers statiques (le sitemap statique, la page normale…)
     }
     return env.ASSETS.fetch(request);
