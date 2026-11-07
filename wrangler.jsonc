@@ -1,7 +1,7 @@
 {
   // Nom du Worker : garde EXACTEMENT le même nom que ton Worker actuel sur Cloudflare
   // (sinon un nouveau Worker serait créé et le domaine ija-nbadlou.tn resterait branché sur l'ancien).
-  "name": "ija-nbadlou",
+  "name": "ija-nbadlou2",
   "main": "worker.js",
   "compatibility_date": "2025-09-01",
   "assets": {
