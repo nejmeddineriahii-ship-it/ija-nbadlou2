@@ -167,6 +167,11 @@ async function listingPage(request, env, id) {
     .on('meta[name="twitter:description"]', setContent("description"))
     .on('meta[name="twitter:card"]', { element(e) { e.setAttribute("content", "summary_large_image"); } })
     .on('link[rel="canonical"]', { element(e) { e.setAttribute("href", m.url); } })
+    // on retire les balises image par défaut de la page d'accueil avant d'ajouter celles de l'annonce
+    .on('meta[property="og:image"]', { element(e) { e.remove(); } })
+    .on('meta[property="og:image:width"]', { element(e) { e.remove(); } })
+    .on('meta[property="og:image:height"]', { element(e) { e.remove(); } })
+    .on('meta[name="twitter:image"]', { element(e) { e.remove(); } })
     .on("head", {
       element(e) {
         e.append(
