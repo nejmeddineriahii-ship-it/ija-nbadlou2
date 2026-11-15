@@ -14,6 +14,7 @@
 const PROJECT_ID = "ija-nbadlo";
 const API_KEY = "AIzaSyAOvAmGVrTgo5qhILdysEVyzYi2TmjDIeE";
 const SITE = "https://ija-nbadlou.tn";
+const AUTH_HOST = PROJECT_ID + ".firebaseapp.com";
 const FS_BASE = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
 
 /* ------------------------------------------------------------------ helpers (exportés pour les tests) */
@@ -307,6 +308,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const p = url.pathname;
+    // connexion Google/Facebook sous ton propre domaine : on relaie /__/auth/* et /__/firebase/* vers Firebase
+    if (p.startsWith("/__/auth/") || p.startsWith("/__/firebase/")) {
+      const target = "https://" + AUTH_HOST + p + url.search;
+      return fetch(new Request(target, request), { redirect: "manual" });
+    }
     try {
       if (request.method === "POST" && p === "/api/new-listing") return await newListingRoute(request, env);
       if (request.method === "GET" || request.method === "HEAD") {
